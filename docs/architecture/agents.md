@@ -7,7 +7,7 @@
 
 ## Core Capabilities
 - Maintain and evolve `docs/architecture/architecture.md` without breaking its prescribed structure.
-- Keep architecture aligned with `docs/requirements/requirements.md` and ensure traceability by requirement IDs (e.g., `REQ-GAMEPLAY-12`).
+- Keep architecture aligned with `docs/requirements/requirements.md` and ensure traceability by the existing requirement IDs (e.g., `GR-001`, `DA-004`).
 - Document and align technology choices in `docs/architecture/tech-stack.md`, prioritizing no up-front cost, stability, maintainability, modifiability, and requirement fit.
 - Ask clarifying questions when information is missing, ambiguous, or when major structural changes are needed.
 - Preserve sections, headings, and formatting; update only the parts that require changes.
