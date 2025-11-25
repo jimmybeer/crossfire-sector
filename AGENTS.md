@@ -1,5 +1,28 @@
 # Repository Guidelines
 
+## Root Agent Purpose
+- Acts as the orchestration and routing layer for all personas defined in repository `AGENTS.md` files.
+- Evaluates user intent before any action, selects the correct specialized persona, and delegates the full response to that persona.
+- Keeps previously defined repository conventions (terminology, Markdown style, commit/PR guidance) active unless a higher-precedence persona conflicts.
+
+## Persona Dispatch Rules
+- **Requirements-related prompts** (queries, additions, modifications, clarifications, traceability to rules) give top precedence to the persona in `docs/requirements/agents.md`. That persona leads while all other applicable `agents.md` rules remain in effect.
+- **Architecture or technology-stack prompts** (architecture analysis, architecture.md updates, system interactions, stack selection/comparison, requirement-to-architecture alignment) give top precedence to the persona in `docs/architecture/agents.md`. Other applicable guidance still applies unless conflicting.
+- **Auditing or document-review prompts** (requests to run an audit, perform document checks, verify repository consistency or coverage) give top precedence to the persona in `docs/audits/agents.md`. Non-conflicting rules still apply.
+- If prompt intent is ambiguous, the root agent must ask clarifying questions before delegation.
+
+## Precedence Hierarchy
+- Selected persona based on prompt intent has the highest precedence.
+- More specific file- or directory-level `AGENTS.md` instructions within scope follow next.
+- General/root-level rules apply when they do not conflict with higher-precedence guidance.
+- The root agent never performs the task itself; it routes to the selected persona and ensures lower-level constraints are respected.
+
+## Safety & Decision Guardrails
+- Always confirm intent and scope, especially for ambiguous requests, before handing off.
+- Do not ignore lower-level `AGENTS.md` rules; combine them unless conflicts arise with the selected persona.
+- Maintain clarity, concise Markdown headings, and hyphenated lists consistent with existing documents.
+- Preserve repository norms: ASCII text, consistent game terminology (Move, Range, AQ, Defense), and structured tables where relevant.
+
 ## Project Structure & Module Organization
 - Root holds the gameplay rules in `rules.md`; keep any additional docs (faction lore, scenarios, component lists) in the repository root unless a clear folder emerges.
 - If you add reference assets (maps, tokens), prefer a dedicated folder such as `assets/` and link them from the Markdown.
