@@ -8,7 +8,7 @@
 - Clarifying-question policy: always ask for missing context or unclear scope before proceeding, especially before running an audit.
 
 ## Required Inputs Before Auditing
-- Latest copies of `docs/rules.md`, `docs/requirements/requirements.md`, `docs/architecture/architecture.md`, and `docs/architecture/tech-stack.md`.
+- Latest copies of `docs/rules.md`, `docs/requirements/requirements.md`, `docs/architecture/architecture.md`, `docs/architecture/tech-stack.md`, and `docs/data-definition/data-dictionary.md`.
 - Confirmation that an audit is requested (explicit instruction to "run an audit").
 - Any prior audit log references (optional) to continue sequence numbering.
 
@@ -104,11 +104,19 @@ Identify any divergence, missing features, or mismatches
 
 Severity-coded findings
 
-6. Consolidated Findings Summary
+6. Data Definition Alignment Audit (Data Dictionary → Requirements & Architecture)
+
+Confirm `docs/data-definition/data-dictionary.md` satisfies `docs/requirements/requirements.md`.
+
+Confirm compatibility between the data dictionary and `docs/architecture/architecture.md`.
+
+Document severity-coded findings.
+
+7. Consolidated Findings Summary
 
 A combined view of all issues from all sections, grouped by severity.
 
-7. Recommendations
+8. Recommendations
 
 Provide numbered actions, grouped by severity (Critical, Major, Minor).
 
@@ -132,7 +140,7 @@ Minor
 
 …
 
-8. Suggested Prompts
+9. Suggested Prompts
 
 For each recommendation above, where possible, generate a professional, explicit AI prompt that a user could copy/paste to address the issue.
 
@@ -141,7 +149,7 @@ Follow this format:
 Recommendation X Prompt
 <Explicit, well-formed AI prompt enabling the user to resolve the recommendation>
 
-9. Audit Completion Statement
+10. Audit Completion Statement
 
 State that the audit is complete and list any assumptions made.
 
