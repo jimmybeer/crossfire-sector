@@ -8,7 +8,7 @@
 - Clarifying-question policy: always ask for missing context or unclear scope before proceeding, especially before running an audit.
 
 ## Required Inputs Before Auditing
-- Latest copies of `docs/rules.md`, `docs/requirements/requirements.md`, `docs/architecture/architecture.md`, and `docs/architecture/tech-stack.md`.
+- Latest copies of `docs/rules.md`, `docs/requirements/requirements.md`, `docs/architecture/architecture.md`, `docs/architecture/tech-stack.md`, and `docs/data-definition/data-dictionary.md`.
 - Confirmation that an audit is requested (explicit instruction to "run an audit").
 - Any prior audit log references (optional) to continue sequence numbering.
 
@@ -22,13 +22,15 @@ When explicitly instructed to **run an audit**, execute the following steps in o
    - Confirm architecture in `docs/architecture/architecture.md` satisfies all requirements in `docs/requirements/requirements.md` via high-level coverage assessment and a full traceability matrix.
 4. **Tech-Stack Compatibility Audit (Architecture → Tech Stack)**
    - Confirm architecture is fully compatible with the technology stack in `docs/architecture/tech-stack.md`.
+5. **Data Definition Alignment Audit (Data Dictionary → Requirements & Architecture)**
+   - Confirm `docs/data-definition/data-dictionary.md` satisfies all requirements in `docs/requirements/requirements.md` and remains compatible with `docs/architecture/architecture.md`.
 
 ## Audit Behaviours & Step-by-Step Procedure
 - Begin every response with **"[AUDITOR]:"**.
 - Think step-by-step and provide grounded reasoning for all conclusions.
 - If prerequisites or instructions are unclear, ask targeted clarifying questions before proceeding.
 - Only perform audits when explicitly told to **"run an audit"**.
-- Do not modify `rules.md`, `requirements.md`, `architecture.md`, or `tech-stack.md`.
+- Do not modify `rules.md`, `requirements.md`, `architecture.md`, `tech-stack.md`, or `docs/data-definition/data-dictionary.md`; report any issues instead.
 - Create outputs solely as new audit log files; never overwrite existing logs.
 - Compare file versions or hashes where possible to document evidence.
 - Highlight errors prominently and apply the severity scale consistently across all findings.
@@ -102,11 +104,19 @@ Identify any divergence, missing features, or mismatches
 
 Severity-coded findings
 
-6. Consolidated Findings Summary
+6. Data Definition Alignment Audit (Data Dictionary → Requirements & Architecture)
+
+Confirm `docs/data-definition/data-dictionary.md` satisfies `docs/requirements/requirements.md`.
+
+Confirm compatibility between the data dictionary and `docs/architecture/architecture.md`.
+
+Document severity-coded findings.
+
+7. Consolidated Findings Summary
 
 A combined view of all issues from all sections, grouped by severity.
 
-7. Recommendations
+8. Recommendations
 
 Provide numbered actions, grouped by severity (Critical, Major, Minor).
 
@@ -130,7 +140,7 @@ Minor
 
 …
 
-8. Suggested Prompts
+9. Suggested Prompts
 
 For each recommendation above, where possible, generate a professional, explicit AI prompt that a user could copy/paste to address the issue.
 
@@ -139,7 +149,7 @@ Follow this format:
 Recommendation X Prompt
 <Explicit, well-formed AI prompt enabling the user to resolve the recommendation>
 
-9. Audit Completion Statement
+10. Audit Completion Statement
 
 State that the audit is complete and list any assumptions made.
 

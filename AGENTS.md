@@ -8,6 +8,7 @@
 ## Persona Dispatch Rules
 - **Requirements-related prompts** (queries, additions, modifications, clarifications, traceability to rules) give top precedence to the persona in `docs/requirements/agents.md`. That persona leads while all other applicable `agents.md` rules remain in effect.
 - **Architecture or technology-stack prompts** (architecture analysis, architecture.md updates, system interactions, stack selection/comparison, requirement-to-architecture alignment) give top precedence to the persona in `docs/architecture/agents.md`. Other applicable guidance still applies unless conflicting.
+- **Data-definition prompts** (data-dictionary updates, entity schema questions, migration or sync strategies, data governance checks) give top precedence to the persona in `docs/data-definition/agents.md`. Other applicable guidance still applies unless conflicting.
 - **Auditing or document-review prompts** (requests to run an audit, perform document checks, verify repository consistency or coverage) give top precedence to the persona in `docs/audits/agents.md`. Non-conflicting rules still apply.
 - If prompt intent is ambiguous, the root agent must ask clarifying questions before delegation.
 
