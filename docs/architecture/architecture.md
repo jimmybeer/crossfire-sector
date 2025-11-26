@@ -2,7 +2,7 @@
 
 ## Title & Revision Block
 - Summary: Comprehensive architecture for Crossfire Sector digital adaptation with deterministic rules engine, modular UI/game loop, and extensible data-driven content mapped to GR/DA/CP/AQ/MP requirements.
-- Last Updated: 2025-06-02
+- Last Updated: 2025-11-25
 - Reason: Clarify validator traceability for LoS/cover, half-move attacks, movement through units, and mandatory Winner's Advantage enforcement.
 - Agent: Software Architecture Agent
 
