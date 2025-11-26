@@ -2,8 +2,8 @@
 
 ## Title & Revision Block
 - Summary: Comprehensive architecture for Crossfire Sector digital adaptation with deterministic rules engine, modular UI/game loop, and extensible data-driven content mapped to GR/DA/CP/AQ/MP requirements.
-- Last Updated: 2025-11-25
-- Reason: Replace placeholder with full architecture, candidate evaluation, and traceability coverage.
+- Last Updated: 2025-06-02
+- Reason: Clarify validator traceability for LoS/cover, half-move attacks, movement through units, and mandatory Winner's Advantage enforcement.
 - Agent: Software Architecture Agent
 
 ## 1. Architectural Overview (High-Level)
@@ -47,7 +47,7 @@ Module Interactions:
   4. Resolver executes deterministic simulation using RNG Service; produces `Event`s (hit, Down, kill, initiative outcome, mission score).
   5. State updated; Persistence logs command + seed offset; UI renders events; Networking broadcasts if enabled.
 - Validator rules coverage:
-  - Deployment (GR-012, DA-001), movement bounds/impassable (GR-018, GR-032, DA-004), action limits (GR-015–GR-017), attack half-move allowance (GR-019), LoS/Range/Cover (GR-031, GR-004, GR-021.1, DA-005), reroll caps (GR-045, DA-018), optional rules toggles (GR-040–GR-042).
+  - Deployment (GR-012, DA-001), movement bounds/impassable with pass-through allowance (GR-018, GR-032, GR-032.1, DA-004), action limits (GR-015–GR-017), attack half-move allowance before Shoot/Melee (GR-019), LoS/Range/Cover (GR-031, GR-004, GR-021.1, DA-005), reroll caps (GR-045, DA-018), campaign Winner's Advantage enforcement (GR-040), optional commander/events toggles (GR-041–GR-042).
 - Resolver capabilities:
   - Initiative/round loop (GR-013–GR-016, GR-043–GR-044), attack resolution (GR-022–GR-026, DA-006), melee (GR-027–GR-028), down/first aid flow (GR-020, GR-029–GR-030, DA-007), mission scoring each round (GR-033–GR-035.1, DA-009), campaign scoring (GR-036–GR-040), Quick Start/Revive handling (DA-017, DA-019), commander effects (GR-041, DA-020), events (GR-042).
 - Data Schemas (AQ-002):
@@ -71,8 +71,8 @@ Module Interactions:
   - Unit tests for validators (deployment, LoS, activation counts).
   - Property tests for deterministic RNG replay.
   - Integration tests for round loops, mission scoring.
-  - Golden-record tests for faction traits and optional rules toggles.
-  - Interfaces & Test Seams: Validator interface `validate(command, state, data_config) -> ValidationResult {ok, errors[], preview{reachable_tiles, valid_targets}}` with unit tests for deployment zones/row distribution (GR-012, DA-001), movement/impassable/diagonal corner checks (GR-018, GR-032, DA-004), activation limits (GR-015–GR-017, DA-003), attack half-move enforcement before Shoot/Melee (GR-019), LoS/range/cover legality (GR-031, GR-004, GR-021.1, DA-005), reroll caps (GR-045, DA-018), optional toggles (GR-040–GR-042). RNG interface `Rng(seed, offset=0)` with `roll_d6`, `roll_2d6`, `advance(n)`, `snapshot/restore`; property tests ensure identical seeds + commands produce identical rolls (AQ-003, MP-005), offsets track calls, and snapshot/restore serialize in saves. Mission/Scoring interface `score_round(state, mission_config)` and `evaluate_control(state)`; tests for mission objectives and no-point ties (GR-033, GR-035.1), Occupy bonuses, tie-triggered extra rounds (GR-035), mission uniqueness (GR-039), advantages persistence (GR-040), per-battle points (GR-038). Integration tests cover round loop (GR-013–GR-016, GR-043–GR-044), Down/First Aid immediate activation (GR-029–GR-030, DA-007), commander/events effects (GR-041–GR-042, DA-019–DA-020). Perf micro-benchmarks for LoS caching and activation timing on target devices.
+  - Golden-record tests for faction traits and optional commander/event toggles.
+  - Interfaces & Test Seams: Validator interface `validate(command, state, data_config) -> ValidationResult {ok, errors[], preview{reachable_tiles, valid_targets}}` with unit tests for deployment zones/row distribution (GR-012, DA-001), movement/impassable/diagonal corner checks plus pass-through occupied squares (GR-018, GR-032, GR-032.1, DA-004), activation limits (GR-015–GR-017, DA-003), attack half-move enforcement before Shoot/Melee (GR-019), LoS/range/cover legality (GR-031, GR-004, GR-021.1, DA-005), reroll caps (GR-045, DA-018), mandatory campaign Winner's Advantage selection (GR-040), optional commander/events toggles (GR-041–GR-042). RNG interface `Rng(seed, offset=0)` with `roll_d6`, `roll_2d6`, `advance(n)`, `snapshot/restore`; property tests ensure identical seeds + commands produce identical rolls (AQ-003, MP-005), offsets track calls, and snapshot/restore serialize in saves. Mission/Scoring interface `score_round(state, mission_config)` and `evaluate_control(state)`; tests for mission objectives and no-point ties (GR-033, GR-035.1), Occupy bonuses, tie-triggered extra rounds (GR-035), mission uniqueness (GR-039), advantages persistence (GR-040), per-battle points (GR-038). Integration tests cover round loop (GR-013–GR-016, GR-043–GR-044), Down/First Aid immediate activation (GR-029–GR-030, DA-007), commander/events effects (GR-041–GR-042, DA-019–DA-020). Perf micro-benchmarks for LoS caching and activation timing on target devices.
 
 ## 4. Technology Alignment
 - Engine: Godot 4.x scenes for UI/rendering; rules engine and command bus in GDScript/C# modules separated from scene tree (AQ-001).
@@ -91,6 +91,7 @@ Module Interactions:
 - Optional networking adapter: Keeps offline-first while preparing for authoritative or lockstep modes without changing core rules (MP-002–MP-006).
 
 ## 6. Change Log
+- 2025-06-02: Clarified validator/test coverage for LoS/cover IDs, GR-019 half-move enforcement, GR-032.1 pass-through movement, and mandatory GR-040 campaign advantage handling.
 - 2025-11-25: Added interfaces and test seams for Validator, RNG, mission/scoring, and integration/perf testing (AQ-001–AQ-007, MP-005).
 - 2025-11-25: Added persistence slot/size/concurrency policies and integrity guidance (CP-005, CP-007).
 - 2025-11-25: Added performance budgets and LoS/cover optimization guidance (CP-006).
@@ -100,6 +101,6 @@ Module Interactions:
 ## 7. Summary & Evaluation
 - Strengths: Deterministic, testable core; clear module boundaries; data-driven content; command/replay pipeline supports MP and offline save/resume; explicit validator/resolver coverage of GR/DA/CP/AQ/MP; cross-cutting logging and error handling.
 - Weaknesses: Requires discipline to keep UI separate from rules; RNG offset tracking must stay consistent; LoS/cover computation complexity may need optimization on mobile (CP-006).
-- Requirement coverage: Rules Engine + Validator/Resolver cover GR-001–GR-045; Data/Optional Toggles cover GR-005–GR-042; Command Bus/Seeded RNG/replay address DA-001–DA-021 and MP-001–MP-006; UI/Input/Rendering handle CP-001–CP-007; AQ-001–AQ-007 met via isolation, data-driven configs, deterministic state, centralized RNG, and validation APIs.
+- Requirement coverage: Rules Engine + Validator/Resolver cover GR-001–GR-045; Data/toggles cover GR-005–GR-042 with GR-040 enforced in campaigns and GR-041–GR-042 as optional; Command Bus/Seeded RNG/replay address DA-001–DA-021 and MP-001–MP-006; UI/Input/Rendering handle CP-001–CP-007; AQ-001–AQ-007 met via isolation, data-driven configs, deterministic state, centralized RNG, and validation APIs.
 - Testability: Command pattern, pure validation functions, seeded RNG, and snapshot/state hashing enable unit/integration/golden tests; UI contracts allow view-model testing without rendering.
-- Maintainability: Data schemas and modular services simplify balance changes and optional rule toggles; networking adapter remains pluggable. Remaining gap: finalize device matrix for performance targets (CP-006); core behaviors, saves, concurrency limits, and sizing are specified.
+- Maintainability: Data schemas and modular services simplify balance changes and optional commander/event toggles; networking adapter remains pluggable. Remaining gap: finalize device matrix for performance targets (CP-006); core behaviors, saves, concurrency limits, and sizing are specified.
