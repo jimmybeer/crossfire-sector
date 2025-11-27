@@ -32,7 +32,7 @@ Factions & Units (from Factions, Faction notes)
 - GR-011: The system shall support Solar Wardens’ random Move by rolling 1d6 per Move action.
 
 Deployment & Initiative (from Deployment & Activation System)
-- GR-012: The system shall enforce deployment into home zones (P1 columns 1–2, rows 1–9; P2 columns 14–15, rows 1–9), requiring each player to place units across at least two distinct rows within their home zone; deployment is performed without visibility into the opponent’s placements, and sequence is irrelevant.
+- GR-012: The system shall enforce deployment into home zones (P1 columns 1–2, rows 1–9; P2 columns 14–15, rows 1–9), requiring each player to place units across at least two distinct rows within their home zone; deployment is performed without visibility into the opponent’s placements, and sequence is irrelevant. Rationale: the tabletop intent is simultaneous deployment, but with local alternating inputs on a single device true simultaneity is impractical; hidden, order-agnostic placement preserves the fairness goal.
 - GR-013: The system shall, at each round start, have both players roll 1d6 for initiative and reroll ties.
 - GR-014: The system shall let the initiative winner choose to (a) activate first with one unit or (b) allow the opponent to activate first with one unit.
 
@@ -71,15 +71,15 @@ Placement & Bounds
 - GR-032.1: The system shall allow movement through squares occupied by other units but shall prohibit ending movement on any occupied square.
 
 Missions & Victory (from Mission Types)
-- GR-033: The system shall support six mission types with stated objectives: Crossfire Clash (1 point per kill, most points wins); Control Center (most units in center zone, columns 7–9, rows 3–6); Break Through (more units in the opponent’s home zone—P1’s home zone is columns 1–2, rows 1–9; P2’s is columns 14–15, rows 1–9); Dead Center (control the single central square at column 8, row 5); Dead Zone (prevent enemy units in center zone columns 7–9, rows 3–6); Occupy (control the most of three sectors across columns 3–13 and rows 1–9: sector A columns 3–6, sector B columns 7–9, sector C columns 10–13; control is having the most units; +1 point for controlling sector B; +3 points for controlling the sector nearest the opponent’s home zone—P1 gains +3 for sector C, P2 gains +3 for sector A).
+- GR-033: The system shall support six mission types with stated objectives: Crossfire Clash (1 point per kill, most points wins); Control Center (most units in center zone, columns 7–9, rows 3–6); Break Through (more units in the opponent’s home zone—P1’s home zone is columns 1–2, rows 1–9; P2’s is columns 14–15, rows 1–9); Dead Center (control the single central square at column 8, row 5); Dead Zone (prevent enemy units in center zone columns 7–9, rows 3–6); Occupy (control the most of three sectors across columns 3–13 and rows 1–9: sector A columns 3–6, sector B columns 7–9, sector C columns 10–13; control is having the most units; +1 point for controlling sector B; +3 points for controlling the sector nearest the opponent’s home zone—P1 gains +3 for sector C, P2 gains +3 for sector A). Rationale: the tabletop Occupy rule calls for four equal areas, but the 15×9 grid cannot be evenly divided into four, so the digital adaptation uses three sectors with bonus points toward the opponent’s side to preserve balance.
 - GR-034: The system shall allow mission selection by choice or random roll at battle start; no repeats in campaigns.
-- GR-035: At end of round 6, ties shall trigger a 7th round; if still tied, play an eighth and final round; no automatic tie VP is awarded.
-- GR-035.1: The system shall evaluate mission control and award mission points at the end of each round; ties in unit counts for control shall award no points.
+- GR-035: At end of round 6, ties shall trigger a single 7th round; if still tied after the 7th, the battle is recorded as a tie.
+- GR-035.1: The system shall evaluate mission control and award mission points at the end of each round; ties in unit counts for control shall award no points. A tied battle after the 7th round shall award 1 victory point to each player for campaign scoring.
 
 Campaign Mode & Scoring (from Campaign Mode)
 - GR-036: The system shall support campaigns of length 1d3 + 2 battles (3–5).
 - GR-037: The system shall require players to keep the same faction throughout a campaign.
-- GR-038: The system shall track per-battle points (mission completion within 7 rounds: +2; kill all enemies: +1; survive with 3+ units: +1) and add each battle’s total to a cumulative campaign score; per-battle points do not carry over individually outside the cumulative total.
+- GR-038: The system shall track per-battle points (mission completion within 7 rounds: +2; kill all enemies: +1; survive with 3+ units: +1; battle ends in a tie after the 7th round: +1 to each player) and add each battle’s total to a cumulative campaign score; per-battle points do not carry over individually outside the cumulative total. The tie VP defined in GR-035.1 shall be included in both the per-battle total and the cumulative campaign score.
 - GR-039: The system shall ensure each campaign mission is unique (no repeats).
 
 Winner’s Advantage (from Winner’s Advantage)

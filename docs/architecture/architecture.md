@@ -25,7 +25,7 @@
 - **Persistence Service** (DA-009, CP-005, CP-007, MP-006)
   - Save/load matches and campaigns; stores serialized state, command history, RNG seed, and used missions. Supports resume and replay.
 - **UI Layer** (CP-001–CP-004, DA-004–DA-014, DA-017–DA-021)
-  - Scenes: Main Menu, Match Setup, Battlefield View, Action Picker, Dice/Result Panel, Logs/History, Campaign Screen. Consumes state snapshots and events; never mutates state directly.
+  - Scenes: Main Menu, Match Setup, Battlefield View, Action Picker, Dice/Result Panel, Logs/History, Rules Reference/Glossary, Campaign Screen. Consumes state snapshots and events; never mutates state directly. Rules Reference/Glossary consumes structured data from rules/requirements/data dictionary exports (e.g., JSON for stats, actions, missions, optional rules) to keep in-game reference aligned with source documents.
 - **Input Layer** (CP-001)
   - Adapters for pointer, touch, controller; maps gestures/buttons to abstract commands.
 - **Networking Adapter (future)** (MP-001–MP-006)
@@ -62,6 +62,7 @@ Module Interactions:
   - State Snapshot DTOs for rendering grid, cover highlights, valid move/attack tiles.
   - Event Stream for dice results, crits/fails, score changes.
   - Preview API: Validator exposes reachable tiles and valid targets without committing state.
+  - Rules Reference/Glossary feed: structured JSON/tres generated from rules/requirements/data dictionary drives an in-game reference panel; UI consumes read-only content so gameplay logic stays centralized.
 - Cross-Cutting:
   - Logging (DA-006, DA-013): Structured logs per command with dice rolls, RNG offsets, validation decisions.
   - Error handling: Validator returns typed errors for illegal commands; UI surfaces messages.
