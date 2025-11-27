@@ -641,7 +641,7 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
   "unit_states": [
     {"id": "unit_p1_1", "template_id": "azure_blades_basic", "owner_id": "P1", "position": {"col": 2, "row": 3}, "status": "alive", "activations_used": 0, "has_moved_this_activation": false, "cover_state": "none", "rerolls_available": 1, "version": "1.0.0"}
   ],
-  "round_state": {"round_number": 1, "initiative_rolls": {"P1": 6, "P2": 3}, "initiative_winner": "P1", "first_activation_choice": "first", "remaining_batches": [{"player_id": "P1", "remaining": 2}, {"player_id": "P2", "remaining": 2}], "extra_rounds_remaining": 2, "version": "1.0.0"},
+  "round_state": {"round_number": 1, "initiative_rolls": {"P1": 6, "P2": 3}, "initiative_winner": "P1", "first_activation_choice": "first", "remaining_batches": [{"player_id": "P1", "remaining": 2}, {"player_id": "P2", "remaining": 2}], "extra_rounds_remaining": 2, "mission_points_this_round": {"P1": 1, "P2": 0}, "battle_points_total": {"P1": 1, "P2": 0}, "version": "1.1.0"},
   "rng": {"seed": "match_seed_2025_11_25", "offset": 5, "last_roll": {"type": "d6", "values": [6]}, "version": "1.0.0"},
   "command_log_id": "log_match_12",
   "status": "active",
