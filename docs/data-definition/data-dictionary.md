@@ -397,7 +397,7 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 
 ## RoundState
 [Back to TOC](#linked-table-of-contents)
-**Purpose:** Tracks round progression, initiative outcomes, and activation batches.
+**Purpose:** Tracks round progression, initiative outcomes, activation batches, and mission scoring state.
 
 **Schema**
 | Field | Type | Required | Default | Constraints/Notes |
@@ -408,16 +408,19 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 | first_activation_choice | string | yes | first | "first" or "pass" (opponent activates). |
 | remaining_batches | array\<object\> | yes | [] | Batches of two activations alternating after first. |
 | extra_rounds_remaining | int | yes | 2 | Supports tie-triggered rounds. |
-| version | string | yes | 1.0.0 | Semantic per-entity version. |
+| mission_points_this_round | object | yes | {"P1": 0, "P2": 0} | Per-player mission points earned in the current round; must match UI display. |
+| battle_points_total | object | yes | {"P1": 0, "P2": 0} | Running per-battle mission totals feeding campaign calculations. |
+| version | string | yes | 1.1.0 | Semantic per-entity version. |
 
 **Relationships**
 - Embedded in [MatchState](#matchstate); referenced by Validator to enforce activation flow.
+- Mission and battle points are surfaced to UI overlays and campaign calculators.
 
 **Versioning & Migration**
-- v1.0.0 baseline; adding timers or pacing fields would be additive.
+- v1.1.0 adds mission and cumulative battle point tracking; migrate by defaulting missing objects to `{P1: 0, P2: 0}` when loading older saves.
 
 **Traceability**
-- Requirements: GR-013–GR-016, GR-043–GR-044, DA-002, DA-003, DA-016, DA-017.
+- Requirements: GR-013–GR-016, GR-033–GR-035.1, GR-038, GR-043–GR-044, DA-002, DA-003, DA-009, DA-016, DA-017.
 - Architecture: Command Bus & Game Loop, Validator (activation order).
 
 **Sync Strategy**
@@ -438,7 +441,9 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
     {"player_id": "P1", "remaining": 2}
   ],
   "extra_rounds_remaining": 2,
-  "version": "1.0.0"
+  "mission_points_this_round": {"P1": 1, "P2": 2},
+  "battle_points_total": {"P1": 5, "P2": 6},
+  "version": "1.1.0"
 }
 ```
 
