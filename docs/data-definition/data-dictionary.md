@@ -149,16 +149,17 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 | control_zones | array\<Zone\> | no | [] | Column/row ranges; empty for kill missions. |
 | scoring_rules | object | yes | - | Contains `timing` (per_round_end), `points` map, bonuses. |
 | round_limit | int | yes | 6 | Base limit before tie extension. |
-| max_extra_rounds | int | yes | 2 | Supports rounds 7–8. |
+| max_extra_rounds | int | yes | 1 | Single 7th round per GR-035/GR-043; cap total rounds at 7. |
 | unique_per_campaign | bool | yes | true | Enforces GR-039/DA-015. |
 | notes | string | no | "" | Bonuses (sector B +1, nearest sector +3). |
-| version | string | yes | 1.0.0 | Semantic per-entity version. |
+| version | string | yes | 1.1.0 | Semantic per-entity version. |
 
 **Relationships**
 - Referenced by [MatchState](#matchstate); scored by Mission/Scoring Engine.
 - [CampaignState](#campaignstate) tracks used missions to enforce uniqueness.
 
 **Versioning & Migration**
+- v1.1.0 caps extra rounds at one (maximum 7 total rounds) to align with GR-035/GR-043; migrate by clamping `max_extra_rounds` to 1.
 - v1.0.0 includes six missions; adding missions is additive; changing scoring requires migration rule to preserve legacy saves.
 
 **Traceability**
@@ -187,10 +188,10 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
     "points": {"control": 1, "nearest_opponent_bonus": 3}
   },
   "round_limit": 6,
-  "max_extra_rounds": 2,
+  "max_extra_rounds": 1,
   "unique_per_campaign": true,
   "notes": "Sector nearest opponent grants +3 (A for P2, C for P1); sector B +1.",
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
 ```
 
@@ -642,7 +643,7 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
   "unit_states": [
     {"id": "unit_p1_1", "template_id": "azure_blades_basic", "owner_id": "P1", "position": {"col": 2, "row": 3}, "status": "alive", "activations_used": 0, "has_moved_this_activation": false, "cover_state": "none", "rerolls_available": 1, "version": "1.0.0"}
   ],
-  "round_state": {"round_number": 1, "initiative_rolls": {"P1": 6, "P2": 3}, "initiative_winner": "P1", "first_activation_choice": "first", "remaining_batches": [{"player_id": "P1", "remaining": 2}, {"player_id": "P2", "remaining": 2}], "extra_rounds_remaining": 2, "mission_points_this_round": {"P1": 1, "P2": 0}, "battle_points_total": {"P1": 1, "P2": 0}, "version": "1.1.0"},
+  "round_state": {"round_number": 1, "initiative_rolls": {"P1": 6, "P2": 3}, "initiative_winner": "P1", "first_activation_choice": "first", "remaining_batches": [{"player_id": "P1", "remaining": 2}, {"player_id": "P2", "remaining": 2}], "extra_rounds_remaining": 1, "mission_points_this_round": {"P1": 1, "P2": 0}, "battle_points_total": {"P1": 1, "P2": 0}, "version": "1.2.0"},
   "rng": {"seed": "match_seed_2025_11_25", "offset": 5, "last_roll": {"type": "d6", "values": [6]}, "version": "1.0.0"},
   "command_log_id": "log_match_12",
   "status": "active",
