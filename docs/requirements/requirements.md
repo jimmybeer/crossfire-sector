@@ -92,7 +92,7 @@ Optional Battle Events (from Optional Battle Events)
 - GR-042: If enabled, pre-game 1d6 roll shall apply one event: (1) Fog of War: max shoot range 3; (2) Deadly Rounds: natural 11/12 (Solar Wardens also 10) instant kill; (3) Fast Assault: all units +1 Move; (4) Focused Fire: shoot without move gains +1 AQ; (5) Revive: revive a Down unit at end of a round once per game; (6) No events.
 
 Timing & Rounds (from Basics, Deployment & Activation)
-- GR-043: The system shall limit battles to 6 rounds unless extended by tie rules up to a maximum of 8.
+- GR-043: The system shall limit battles to 6 rounds, adding a single 7th round only when tied after round 6 and recording the battle as a tie if still tied afterward.
 - GR-044: The system shall ensure activation order follows initiative choice then alternating batches until activation limits reached.
 
 Rerolls (from faction/event advantages)
@@ -114,7 +114,7 @@ Rerolls (from faction/event advantages)
 - DA-013: The system shall log all actions and dice rolls for review and troubleshooting.
 - DA-014: The system shall provide an in-game rules reference/glossary for stats, actions, missions, events, and optional rules.
 - DA-015: The system shall prevent selection of the same mission twice within a campaign.
-- DA-016: The system shall manage tie detection and automatic 7th and 8th rounds when required.
+- DA-016: The system shall manage tie detection, trigger a single automatic 7th round when tied after round 6, and record the battle as a tie if still tied afterward.
 - DA-017: The system shall surface when Quick Start moves occur pre-round and block attacks during them.
 - DA-018: The system shall allow reroll effects with explicit selection of which die to reroll and enforce the single-reroll limit with “must keep second result” where stated.
 - DA-019: The system shall ensure Revive event can be used only once per game at end of a round.
