@@ -138,7 +138,7 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 
 ## MissionDefinition
 [Back to TOC](#linked-table-of-contents)
-**Purpose:** Encodes mission objectives, control zones, scoring cadence, and uniqueness constraints.
+**Purpose:** Encodes mission objectives, control zones, scoring cadence, and uniqueness constraints. Center-band missions (Control Center, Dead Zone) use the full vertical band: columns 7–9, rows 1–9.
 
 **Schema**
 | Field | Type | Required | Default | Constraints/Notes |
