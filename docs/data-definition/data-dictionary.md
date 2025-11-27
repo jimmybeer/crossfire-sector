@@ -402,21 +402,22 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 **Schema**
 | Field | Type | Required | Default | Constraints/Notes |
 | --- | --- | --- | --- | --- |
-| round_number | int | yes | 1 | 1–8 per rules. |
+| round_number | int | yes | 1 | 1–7 per rules; the 7th occurs only when tied after round 6. |
 | initiative_rolls | object | yes | - | `{P1: int, P2: int}` last rolled values. |
 | initiative_winner | string | yes | - | "P1"/"P2". |
 | first_activation_choice | string | yes | first | "first" or "pass" (opponent activates). |
 | remaining_batches | array\<object\> | yes | [] | Batches of two activations alternating after first. |
-| extra_rounds_remaining | int | yes | 2 | Supports tie-triggered rounds. |
+| extra_rounds_remaining | int | yes | 1 | Tracks whether the single tie-triggered 7th round remains. |
 | mission_points_this_round | object | yes | {"P1": 0, "P2": 0} | Per-player mission points earned in the current round; must match UI display. |
 | battle_points_total | object | yes | {"P1": 0, "P2": 0} | Running per-battle mission totals feeding campaign calculations. |
-| version | string | yes | 1.1.0 | Semantic per-entity version. |
+| version | string | yes | 1.2.0 | Semantic per-entity version. |
 
 **Relationships**
 - Embedded in [MatchState](#matchstate); referenced by Validator to enforce activation flow.
 - Mission and battle points are surfaced to UI overlays and campaign calculators.
 
 **Versioning & Migration**
+- v1.2.0 caps rounds at a single extra 7th round; migrate by clamping `round_number` to a maximum of 7 and setting `extra_rounds_remaining` to `min(existing, 1)`.
 - v1.1.0 adds mission and cumulative battle point tracking; migrate by defaulting missing objects to `{P1: 0, P2: 0}` when loading older saves.
 
 **Traceability**
@@ -440,10 +441,10 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
     {"player_id": "P2", "remaining": 2},
     {"player_id": "P1", "remaining": 2}
   ],
-  "extra_rounds_remaining": 2,
+  "extra_rounds_remaining": 1,
   "mission_points_this_round": {"P1": 1, "P2": 2},
   "battle_points_total": {"P1": 5, "P2": 6},
-  "version": "1.1.0"
+  "version": "1.2.0"
 }
 ```
 
