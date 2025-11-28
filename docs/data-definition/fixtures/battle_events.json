@@ -1,0 +1,44 @@
+[
+  {
+    "id": "fog_of_war",
+    "name": "Fog of War",
+    "effect": "Max shoot range 3.",
+    "trigger": "pre_game",
+    "version": "1.0.0"
+  },
+  {
+    "id": "deadly_rounds",
+    "name": "Deadly Rounds",
+    "effect": "Natural 11/12 (Solar also 10) instant kill.",
+    "trigger": "pre_game",
+    "version": "1.0.0"
+  },
+  {
+    "id": "fast_assault",
+    "name": "Fast Assault",
+    "effect": "All units +1 Move.",
+    "trigger": "pre_game",
+    "version": "1.0.0"
+  },
+  {
+    "id": "focused_fire",
+    "name": "Focused Fire",
+    "effect": "Shoot without move gains +1 AQ.",
+    "trigger": "pre_game",
+    "version": "1.0.0"
+  },
+  {
+    "id": "revive",
+    "name": "Revive",
+    "effect": "Revive a Down unit at end of a round once per game.",
+    "trigger": "pre_game",
+    "version": "1.0.0"
+  },
+  {
+    "id": "no_event",
+    "name": "No Event",
+    "effect": "No event applies.",
+    "trigger": "pre_game",
+    "version": "1.0.0"
+  }
+]

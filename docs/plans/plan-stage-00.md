@@ -23,7 +23,7 @@
    - Specify seeded RNG API (`roll_d6`, `roll_2d6`, `advance`, `snapshot/restore`) and seed/offset storage aligned to persistence format.
 5) Persistence format & integrity (ARCH)
    - Define save/load JSON layout for match/campaign, including seed, command log, state hash/checksum, atomic write protocol (temp + rename).
-   - Choose state-hash algorithm: use xxHash64 for fast, deterministic hashing of state snapshots; pair with checksum for file integrity.
+   - Choose state-hash algorithm: use SHA-256 for deterministic hashing of state snapshots; pair with checksum for file integrity.
    - Set target size budgets per architecture guidance (≤256 KB match, ≤512 KB campaign) and note gzip threshold.
 6) Deterministic replay harness (ARCH, ENGINEERING)
    - Build a minimal harness to load a seed + command list and assert identical outcomes (state hash/events) on replays.
@@ -46,7 +46,7 @@
 - Schema: validation passes with no mismatches between DTOs/persistence and data dictionary.
 - Persistence: save/load round-trip retains seed, command log, and state hash; checksum and atomic write workflow validated.
 - Benchmarks: LoS/cover micro-bench plan with target budgets documented (≤500 ms per computation path on desktop).
-- Hashing: State hash uses xxHash64 and is reproducible across platforms given identical snapshots.
+- Hashing: State hash uses SHA-256 and is reproducible across platforms given identical snapshots.
 
 ## Dependencies, Assumptions, Risks
 - Dependencies: current requirements/architecture/data dictionary/tech stack; audit-004 context.
