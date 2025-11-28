@@ -1,0 +1,19 @@
+# Godot project artifacts
+.import/
+.godot/
+.mono/
+
+# Platform build outputs
+/android/
+/ios/
+/linux/
+/macos/
+/windows/
+
+# Godot generated files
+*.import
+*.translation
+
+# Editor/OS noise
+.DS_Store
+Thumbs.db

@@ -30,6 +30,7 @@ When explicitly instructed to **run an audit**, execute the following steps in o
 - Think step-by-step and provide grounded reasoning for all conclusions.
 - If prerequisites or instructions are unclear, ask targeted clarifying questions before proceeding.
 - Only perform audits when explicitly told to **"run an audit"**.
+- When a deviation (e.g., a requirement differing from a rule) includes a documented rationale, flag it explicitly as a **justified deviation** rather than a problem; note the rationale and ensure consistency elsewhere.
 - Do not modify `rules.md`, `requirements.md`, `architecture.md`, `tech-stack.md`, or `docs/data-definition/data-dictionary.md`; report any issues instead.
 - Create outputs solely as new audit log files; never overwrite existing logs.
 - Compare file versions or hashes where possible to document evidence.
