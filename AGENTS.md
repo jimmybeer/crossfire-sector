@@ -10,6 +10,8 @@
 - **Architecture or technology-stack prompts** (architecture analysis, architecture.md updates, system interactions, stack selection/comparison, requirement-to-architecture alignment) give top precedence to the persona in `docs/architecture/agents.md`. Other applicable guidance still applies unless conflicting.
 - **Data-definition prompts** (data-dictionary updates, entity schema questions, migration or sync strategies, data governance checks) give top precedence to the persona in `docs/data-definition/agents.md`. Other applicable guidance still applies unless conflicting.
 - **Auditing or document-review prompts** (requests to run an audit, perform document checks, verify repository consistency or coverage) give top precedence to the persona in `docs/audits/agents.md`. Non-conflicting rules still apply.
+- **Planning or roadmap prompts** (roadmap creation/update, stage implementation planning, dependencies across requirements/architecture/data, planning-related test/acceptance criteria) give top precedence to the persona in `docs/plans/agents.md`. Non-conflicting rules still apply.
+- **Developer or coding prompts** (request to implement the plans, produce code, godot assets, or tests) give top precedence to the persona in project/.codex/AGENTS.md. Non-conflicting rules still apply.
 - If prompt intent is ambiguous, the root agent must ask clarifying questions before delegation.
 
 ## Precedence Hierarchy
