@@ -23,6 +23,8 @@ Agents operating in this workspace must:
 - Style: lowercase_snake_case
 - Be consistent within each file
 
+**TYPE ANNOTATIONS:** Do not rely on inferred types in code. Always declare explicit types for variables and callables in GDScript and other typed contexts.
+
 **TASK SEQUENCE RULE:**
 Foundation first → utilities → scenes → features
 

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "crossfire_clash",
+    "name": "Crossfire Clash",
+    "mission_type": "crossfire_clash",
+    "control_zones": [],
+    "scoring_rules": {"timing": "per_round_end", "points": {"kill": 1}},
+    "round_limit": 6,
+    "max_extra_rounds": 1,
+    "unique_per_campaign": true,
+    "notes": "1 point per kill, most points wins.",
+    "version": "1.1.0"
+  },
+  {
+    "id": "control_center",
+    "name": "Control Center",
+    "mission_type": "control_center",
+    "control_zones": [
+      {"id": "center_band", "col_start": 7, "col_end": 9, "row_start": 1, "row_end": 9}
+    ],
+    "scoring_rules": {"timing": "per_round_end", "points": {"control": 1}},
+    "round_limit": 6,
+    "max_extra_rounds": 1,
+    "unique_per_campaign": true,
+    "notes": "Most units in center band.",
+    "version": "1.1.0"
+  },
+  {
+    "id": "break_through",
+    "name": "Break Through",
+    "mission_type": "break_through",
+    "control_zones": [
+      {"id": "p1_home", "col_start": 1, "col_end": 2, "row_start": 1, "row_end": 9},
+      {"id": "p2_home", "col_start": 14, "col_end": 15, "row_start": 1, "row_end": 9}
+    ],
+    "scoring_rules": {"timing": "per_round_end", "points": {"home_zone_presence": 1}},
+    "round_limit": 6,
+    "max_extra_rounds": 1,
+    "unique_per_campaign": true,
+    "notes": "More units in opponent home zone.",
+    "version": "1.1.0"
+  },
+  {
+    "id": "dead_center",
+    "name": "Dead Center",
+    "mission_type": "dead_center",
+    "control_zones": [
+      {"id": "center_point", "col_start": 8, "col_end": 8, "row_start": 5, "row_end": 5}
+    ],
+    "scoring_rules": {"timing": "per_round_end", "points": {"control": 1}},
+    "round_limit": 6,
+    "max_extra_rounds": 1,
+    "unique_per_campaign": true,
+    "notes": "Control the central square.",
+    "version": "1.1.0"
+  },
+  {
+    "id": "dead_zone",
+    "name": "Dead Zone",
+    "mission_type": "dead_zone",
+    "control_zones": [
+      {"id": "center_band", "col_start": 7, "col_end": 9, "row_start": 1, "row_end": 9}
+    ],
+    "scoring_rules": {"timing": "per_round_end", "points": {"deny": 1}},
+    "round_limit": 6,
+    "max_extra_rounds": 1,
+    "unique_per_campaign": true,
+    "notes": "Prevent enemy units in center band.",
+    "version": "1.1.0"
+  },
+  {
+    "id": "occupy",
+    "name": "Occupy",
+    "mission_type": "occupy",
+    "control_zones": [
+      {"id": "A", "col_start": 3, "col_end": 6, "row_start": 1, "row_end": 9, "bonus_points": 0},
+      {"id": "B", "col_start": 7, "col_end": 9, "row_start": 1, "row_end": 9, "bonus_points": 1},
+      {"id": "C", "col_start": 10, "col_end": 13, "row_start": 1, "row_end": 9, "bonus_points": 0}
+    ],
+    "scoring_rules": {"timing": "per_round_end", "points": {"control": 1, "nearest_opponent_bonus": 3}},
+    "round_limit": 6,
+    "max_extra_rounds": 1,
+    "unique_per_campaign": true,
+    "notes": "Sector nearest opponent grants +3; sector B +1.",
+    "version": "1.1.0"
+  }
+]

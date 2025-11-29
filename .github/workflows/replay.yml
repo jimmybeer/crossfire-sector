@@ -1,0 +1,31 @@
+name: Replay Fixture
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Godot Headless 4.4.1
+        run: |
+          wget https://downloads.tuxfamily.org/godotengine/4.4.1/mono/Godot_v4.4.1-stable_mono_linux.x86_64.zip -O /tmp/godot.zip
+          unzip /tmp/godot.zip -d /tmp/godot
+          sudo mv /tmp/godot/Godot_v4.4.1-stable_mono_linux.x86_64 /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+
+      - name: Replay deterministic fixture
+        run: ./tools/run_replay_fixture.sh
+
+      - name: Run test suite
+        run: godot --headless --path project -s res://tests/test_runner.gd
+
+      - name: Schema validation
+        run: node tools/schema_validate.js

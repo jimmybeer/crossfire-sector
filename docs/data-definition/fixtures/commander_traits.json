@@ -1,0 +1,20 @@
+[
+  {
+    "id": "resilient",
+    "name": "Resilient",
+    "effect": "Ignore first Down in battle.",
+    "version": "1.0.0"
+  },
+  {
+    "id": "sniper",
+    "name": "Sniper",
+    "effect": "Ignore cover when shooting.",
+    "version": "1.0.0"
+  },
+  {
+    "id": "stealth",
+    "name": "Stealth",
+    "effect": "Cannot be targeted if in cover.",
+    "version": "1.0.0"
+  }
+]

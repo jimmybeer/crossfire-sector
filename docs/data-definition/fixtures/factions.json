@@ -1,0 +1,47 @@
+[
+  {
+    "id": "verdant_eye",
+    "name": "Verdant Eye",
+    "roster_limit": 5,
+    "base_stats": {"move": 4, "range": 5, "aq": 1, "defense": 7},
+    "movement_mode": "fixed",
+    "traits": [],
+    "version": "1.0.0"
+  },
+  {
+    "id": "azure_blades",
+    "name": "Azure Blades",
+    "roster_limit": 5,
+    "base_stats": {"move": 5, "range": 2, "aq": 1, "defense": 8},
+    "movement_mode": "fixed",
+    "traits": ["azure_melee_aq_bonus"],
+    "version": "1.0.0"
+  },
+  {
+    "id": "ember_guard",
+    "name": "Ember Guard",
+    "roster_limit": 5,
+    "base_stats": {"move": 2, "range": 3, "aq": 2, "defense": 9},
+    "movement_mode": "fixed",
+    "traits": [],
+    "version": "1.0.0"
+  },
+  {
+    "id": "grey_cloaks",
+    "name": "Grey Cloaks",
+    "roster_limit": 5,
+    "base_stats": {"move": 4, "range": 3, "aq": 0, "defense": 8},
+    "movement_mode": "fixed",
+    "traits": ["grey_reroll"],
+    "version": "1.0.0"
+  },
+  {
+    "id": "solar_wardens",
+    "name": "Solar Wardens",
+    "roster_limit": 4,
+    "base_stats": {"move": "1d6", "range": 4, "aq": 1, "defense": 9},
+    "movement_mode": "roll_per_move",
+    "traits": ["solar_deadly_rounds", "random_move"],
+    "version": "1.0.0"
+  }
+]

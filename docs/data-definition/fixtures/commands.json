@@ -1,0 +1,216 @@
+[
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_001",
+    "payload": {
+      "hidden": true,
+      "position": {
+        "col": 2,
+        "row": 3
+      },
+      "rows_used": [
+        3,
+        4
+      ],
+      "unit_id": "unit_p1_1"
+    },
+    "rng_offset_before": 0,
+    "sequence": 1,
+    "state_hash_after": "sha256:14b7a580460a9e463b6625186b13221a4724226fc1d9891b4f8f580364b6318e",
+    "target_unit_id": null,
+    "timestamp": "2025-11-27T12:00:00Z",
+    "type": "deploy",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_002",
+    "payload": {
+      "half_move_used": false,
+      "path": [
+        {
+          "col": 3,
+          "row": 3
+        },
+        {
+          "col": 4,
+          "row": 3
+        }
+      ],
+      "source_position": {
+        "col": 2,
+        "row": 3
+      }
+    },
+    "rng_offset_before": 0,
+    "sequence": 2,
+    "state_hash_after": "sha256:6880ff6c36be7964a7126d4cc991d7c890a794a3c4431f0a9b01fa8d9819fc30",
+    "target_unit_id": null,
+    "timestamp": "2025-11-27T12:01:00Z",
+    "type": "move",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_003",
+    "payload": {
+      "cover_expected": true,
+      "los_trace": "trace_1",
+      "move_path": [],
+      "range_used": 5,
+      "reroll_available": false,
+      "target_cell": {
+        "col": 14,
+        "row": 6
+      }
+    },
+    "rng_offset_before": 1,
+    "sequence": 3,
+    "state_hash_after": "sha256:790accb842bd6a4a523386d4cddfc04f35aaf9fdf3cb3a8facfe31a6cfa3e5ed",
+    "target_unit_id": "unit_p2_1",
+    "timestamp": "2025-11-27T12:02:00Z",
+    "type": "attack",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_004",
+    "payload": {
+      "move_path": [
+        {
+          "col": 5,
+          "row": 3
+        },
+        {
+          "col": 6,
+          "row": 4
+        }
+      ],
+      "reroll_available": false,
+      "target_cell": {
+        "col": 14,
+        "row": 6
+      }
+    },
+    "rng_offset_before": 3,
+    "sequence": 4,
+    "state_hash_after": "sha256:37ab45a2c8996f74f5633242f2915f7d81971627838168b6f053d2a8d8241480",
+    "target_unit_id": "unit_p2_1",
+    "timestamp": "2025-11-27T12:03:00Z",
+    "type": "melee",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_005",
+    "payload": {
+      "half_move_used": true,
+      "move_path": [
+        {
+          "col": 4,
+          "row": 3
+        }
+      ]
+    },
+    "rng_offset_before": 4,
+    "sequence": 5,
+    "state_hash_after": "sha256:a560878633f5c102e76f3e097e050c0ff377dacafdd269c6233f0ad9cf0d8f6a",
+    "target_unit_id": "unit_p1_1",
+    "timestamp": "2025-11-27T12:04:00Z",
+    "type": "first_aid",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p2_1",
+    "id": "cmd_006",
+    "payload": {
+      "reason": "regroup"
+    },
+    "rng_offset_before": 4,
+    "sequence": 6,
+    "state_hash_after": "sha256:7da4aa62bf825440016af960405f50dea0c64a86f9bcdabac35081a105038e46",
+    "target_unit_id": null,
+    "timestamp": "2025-11-27T12:05:00Z",
+    "type": "hold",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_007",
+    "payload": {
+      "die_index": 0,
+      "roll_id": "attack_cmd_003",
+      "source": "advantage"
+    },
+    "rng_offset_before": 4,
+    "sequence": 7,
+    "state_hash_after": "sha256:cdc5a4dba5d58873a6051e7d4805e3b959671eddb99a79afcbf5fdce92bf8ac5",
+    "target_unit_id": null,
+    "timestamp": "2025-11-27T12:06:00Z",
+    "type": "reroll",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_008",
+    "payload": {
+      "advantage_id": "quick_start",
+      "context": "initiative"
+    },
+    "rng_offset_before": 4,
+    "sequence": 8,
+    "state_hash_after": "sha256:a9bd12e043c6db7c85a9aacdb83add511dab126edd401f24c180f00a6de3c31d",
+    "target_unit_id": null,
+    "timestamp": "2025-11-27T12:07:00Z",
+    "type": "advantage_use",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_009",
+    "payload": {
+      "context": "between_rounds",
+      "event_id": "revive"
+    },
+    "rng_offset_before": 5,
+    "sequence": 9,
+    "state_hash_after": "sha256:954670f1720dbcf0a7204e622d4c535cd4e88917e3b72bc87177bfcf6ced293c",
+    "target_unit_id": null,
+    "timestamp": "2025-11-27T12:08:00Z",
+    "type": "event_use",
+    "version": "1.0.0"
+  },
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_010",
+    "payload": {
+      "unit_ids": [
+        {
+          "path": [
+            {
+              "col": 5,
+              "row": 3
+            }
+          ],
+          "unit_id": "unit_p1_1"
+        },
+        {
+          "path": [
+            {
+              "col": 13,
+              "row": 6
+            }
+          ],
+          "unit_id": "unit_p2_1"
+        }
+      ]
+    },
+    "rng_offset_before": 5,
+    "sequence": 10,
+    "state_hash_after": "sha256:b346a6fb0e1cf5cbcc21ff7ee1b1b52facc96e797aed3d55ead26dbfea3f052b",
+    "target_unit_id": null,
+    "timestamp": "2025-11-27T12:09:00Z",
+    "type": "quick_start_move",
+    "version": "1.0.0"
+  }
+]

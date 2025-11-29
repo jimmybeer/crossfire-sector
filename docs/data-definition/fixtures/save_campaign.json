@@ -1,0 +1,22 @@
+{
+  "campaign": {
+    "id": "campaign_sample_01",
+    "length": 4,
+    "current_battle": 2,
+    "missions_used": ["occupy"],
+    "cumulative_scores": {"P1": 3, "P2": 4},
+    "advantages_history": [
+      {"battle": 1, "player_id": "P2", "advantage_id": "tactical_edge"}
+    ],
+    "current_match": "match_sample_01",
+    "rng": {"seed": "seed_campaign_01", "offset": 7, "last_roll": null, "version": "1.0.0"},
+    "version": "1.0.0"
+  },
+  "meta": {
+    "created_at": "2025-11-27T12:00:00Z",
+    "updated_at": "2025-11-27T12:05:00Z",
+    "checksum": "sha256:placeholder",
+    "compressed": false,
+    "size_bytes": 16384
+  }
+}

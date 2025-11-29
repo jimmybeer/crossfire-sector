@@ -1,0 +1,6 @@
+{
+  "commander": false,
+  "events": false,
+  "campaign": true,
+  "version": "1.0.0"
+}

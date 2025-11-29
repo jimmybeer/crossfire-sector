@@ -1,0 +1,26 @@
+[
+  {
+    "id": "tactical_edge",
+    "name": "Tactical Edge",
+    "effect": "Reroll initiative die before opponent each round; keep second.",
+    "usage_timing": "per_round",
+    "limits": {"per_battle": 1},
+    "version": "1.0.0"
+  },
+  {
+    "id": "quick_start",
+    "name": "Quick Start",
+    "effect": "Before round 1, move two units up to full Move; cannot attack.",
+    "usage_timing": "pre_round",
+    "limits": {"per_battle": 1},
+    "version": "1.0.0"
+  },
+  {
+    "id": "focused_orders",
+    "name": "Focused Orders",
+    "effect": "Gain two rerolls usable on attack, melee, initiative, etc.",
+    "usage_timing": "once_per_battle",
+    "limits": {"per_battle": 1},
+    "version": "1.0.0"
+  }
+]

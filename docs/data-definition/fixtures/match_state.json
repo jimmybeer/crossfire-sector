@@ -1,0 +1,138 @@
+{
+  "battle_event_id": null,
+  "board_layout_id": "standard_15x9",
+  "command_log_id": "log_match_01",
+  "id": "match_sample_01",
+  "mission_id": "occupy",
+  "optional_rules": {
+    "campaign": true,
+    "commander": false,
+    "events": false
+  },
+  "player_states": [
+    {
+      "activation_limit": 4.0,
+      "advantages": [
+        "quick_start"
+      ],
+      "campaign_score": 1.0,
+      "commander_trait": null,
+      "faction_id": "azure_blades",
+      "optional_rules_enabled": {
+        "campaign": true,
+        "commander": false,
+        "events": false
+      },
+      "player_id": "P1",
+      "roster": [
+        "unit_p1_1",
+        "unit_p1_2"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "activation_limit": 4.0,
+      "advantages": [],
+      "campaign_score": 2.0,
+      "commander_trait": null,
+      "faction_id": "ember_guard",
+      "optional_rules_enabled": {
+        "campaign": true,
+        "commander": false,
+        "events": false
+      },
+      "player_id": "P2",
+      "roster": [
+        "unit_p2_1",
+        "unit_p2_2"
+      ],
+      "version": "1.0.0"
+    }
+  ],
+  "rng": {
+    "last_roll": {
+      "type": "d6",
+      "values": [
+        6.0
+      ]
+    },
+    "offset": 5.0,
+    "seed": "seed_match_01",
+    "version": "1.0.0"
+  },
+  "round_state": {
+    "battle_points_total": {
+      "P1": 0.0,
+      "P2": 0.0
+    },
+    "extra_rounds_remaining": 1.0,
+    "first_activation_choice": "first",
+    "initiative_rolls": {
+      "P1": 6.0,
+      "P2": 3.0
+    },
+    "initiative_winner": "P1",
+    "mission_points_this_round": {
+      "P1": 0.0,
+      "P2": 0.0
+    },
+    "remaining_batches": [
+      {
+        "player_id": "P1",
+        "remaining": 2.0
+      },
+      {
+        "player_id": "P2",
+        "remaining": 2.0
+      }
+    ],
+    "round_number": 1.0,
+    "version": "1.2.0"
+  },
+  "state_hash": "sha256:b346a6fb0e1cf5cbcc21ff7ee1b1b52facc96e797aed3d55ead26dbfea3f052b",
+  "status": "active",
+  "terrain": [
+    {
+      "cells": [
+        {
+          "col": 7.0,
+          "row": 5.0
+        }
+      ],
+      "template_id": "blocking_rock"
+    }
+  ],
+  "unit_states": [
+    {
+      "activations_used": 0.0,
+      "cover_state": "none",
+      "has_moved_this_activation": false,
+      "id": "unit_p1_1",
+      "owner_id": "P1",
+      "position": {
+        "col": 2.0,
+        "row": 3.0
+      },
+      "rerolls_available": 1.0,
+      "status": "alive",
+      "template_id": "azure_blades_basic",
+      "version": "1.0.0"
+    },
+    {
+      "activations_used": 0.0,
+      "cover_state": "cover",
+      "has_moved_this_activation": false,
+      "id": "unit_p2_1",
+      "owner_id": "P2",
+      "position": {
+        "col": 14.0,
+        "row": 6.0
+      },
+      "rerolls_available": 0.0,
+      "status": "alive",
+      "template_id": "ember_guard_basic",
+      "version": "1.0.0"
+    }
+  ],
+  "version": "1.0.0"
+}

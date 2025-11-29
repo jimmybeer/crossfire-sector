@@ -30,7 +30,7 @@
 - Objectives: Lock deterministic seams, schema alignment, and persistence integrity to de-risk all later work.
 - Dependencies: None.
 - Inputs: `docs/requirements/requirements.md`, `docs/architecture/architecture.md`, `docs/data-definition/data-dictionary.md`, `docs/architecture/tech-stack.md`, `docs/audits/audit-004.md`.
-- Expected Outputs: Validator/Resolver scaffolding, seeded RNG service with replay harness, command DTOs, save/load format with checksum, schema parity checks against data dictionary, perf micro-bench plan for LoS/cover.
+- Expected Outputs: Validator/Resolver scaffolding, seeded RNG service with replay harness, command DTOs, save/load format with checksum and SHA-256 state hash, schema parity checks against data dictionary, perf micro-bench plan for LoS/cover.
 - Risks & Mitigations: RNG drift → seed/offset tests; schema mismatch → automated schema validation; save corruption → checksum and atomic writes.
 - Exit Criteria: Command replay proves determinism (identical seeds → identical outcomes); schema validation passes against data dictionary; save/load integrity verified (checksum + atomic write); perf micro-bench plan drafted with target budgets.
 - Agents: ARCH, REQ, DATA ENG, AUDITOR.

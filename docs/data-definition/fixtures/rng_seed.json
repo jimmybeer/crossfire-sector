@@ -1,0 +1,6 @@
+{
+  "seed": "seed_match_01",
+  "offset": 5,
+  "last_roll": {"type": "d6", "values": [6]},
+  "version": "1.0.0"
+}
