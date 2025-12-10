@@ -59,10 +59,10 @@ Module Interactions:
 - Persistence Format (CP-005, MP-006): JSON/tres save containing seed, command list, current state hash, mission/event selection, campaign standings, advantages chosen (GR-040), used missions list (GR-039, DA-015).
 - Persistence Policies (CP-005, CP-007): 5–10 campaign slots per profile; 3–5 quick slots for single matches. Save targets ≤256 KB per match; ≤512 KB per campaign; gzip only if above target and keep version hashes. One active loaded match at a time; optional support for up to 2–3 concurrently loaded sessions with background pause. Atomic writes (temp + rename), checksum per save, and free-space checks before write.
 - UI Contracts (DA-004–DA-012):
-  - State Snapshot DTOs for rendering grid, cover highlights, valid move/attack tiles.
-  - Event Stream for dice results, crits/fails, score changes.
-  - Preview API: Validator exposes reachable tiles and valid targets without committing state.
-  - Rules Reference/Glossary feed: structured JSON/tres generated from rules/requirements/data dictionary drives an in-game reference panel; UI consumes read-only content so gameplay logic stays centralized.
+  - State Snapshot DTO: `version`, `board{columns,rows}`, `units[{id,position{col,row},status}]`, `reachability[{col,row}]`, `activation{round,active_player}`, `mission{mission_id,score}`, `campaign{score}`, `logs[]`, `errors[]`.
+  - Event Stream DTO: `{type,payload,requirements,severity}` for dice/results/log stream.
+  - Preview API: Validator exposes `preview.reachable_tiles` and valid targets without committing state; adapters map validation errors to UI error DTOs.
+  - Rules Reference/Glossary feed: `docs/data-definition/exports/ui_reference.json` (version, factions[], actions[], missions[], optional_rules) generated via `tools/build_ui_reference.js`; UI panels consume read-only content so gameplay logic stays centralized.
 - Cross-Cutting:
   - Logging (DA-006, DA-013): Structured logs per command with dice rolls, RNG offsets, validation decisions.
   - Error handling: Validator returns typed errors for illegal commands; UI surfaces messages.
