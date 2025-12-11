@@ -15,6 +15,7 @@ const UIContracts = preload("res://project/src/ui/ui_contracts.gd")
 @onready var grid_layer: Node2D = $Grid
 @onready var tile_layer: Node2D = $Grid/Tiles
 @onready var reach_layer: Node2D = $Grid/Reachability
+@onready var ray_layer: Node2D = $Grid/Rays
 @onready var unit_layer: Node2D = $Grid/Units
 @onready var log_panel: RichTextLabel = $LogPanel/LogText
 @onready var status_label: Label = $StatusLabel
@@ -26,6 +27,7 @@ func render_snapshot(snapshot: Dictionary) -> void:
 	status_label.text = "Snapshot v%s" % snapshot.get("version", UIContracts.SNAPSHOT_VERSION)
 	_render_board(snapshot.get("board", {}))
 	_render_units(snapshot.get("units", []))
+	_render_rays(snapshot.get("rays", []))
 	_render_reachability(snapshot.get("reachability", []))
 	_render_logs(snapshot.get("logs", []))
 
@@ -94,6 +96,18 @@ func _render_reachability(reachability: Array) -> void:
 		marker.size = Vector2(32, 32)
 		marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		reach_layer.add_child(marker)
+
+
+## Private: Render ray segments as overlays.
+func _render_rays(rays: Array) -> void:
+	_clear_children(ray_layer)
+	for ray_data in rays:
+		var line := Line2D.new()
+		line.width = float(ray_data.get("width", 2.0))
+		line.default_color = ray_data.get("color", Color(0.2, 0.9, 0.5, 0.7))
+		line.add_point(ray_data.get("from", Vector2.ZERO))
+		line.add_point(ray_data.get("to", Vector2.ZERO))
+		ray_layer.add_child(line)
 
 
 ## Private: Convert GUI-local coordinates to the grid-local position.
