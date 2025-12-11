@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://losbboxslice"]
+
+[ext_resource type="Script" uid="uid://btiykfd4egf8h" path="res://project/src/ui/scenes/los_bbox_slice.gd" id="1"]
+[ext_resource type="PackedScene" path="res://project/src/ui/scenes/battlefield_view.tscn" id="2"]
+
+[node name="LoSBBoxSlice" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="BattlefieldView" parent="." instance=ExtResource("2")]
+layout_mode = 1
+anchor_right = 0.65
+
+[node name="Sidebar" type="VBoxContainer" parent="."]
+layout_mode = 2
+anchor_left = 0.65
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 12
+
+[node name="ScenarioListContainer" type="PanelContainer" parent="Sidebar"]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+
+[node name="ScenarioList" type="ItemList" parent="Sidebar/ScenarioListContainer"]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+
+[node name="ScenarioDescription" type="RichTextLabel" parent="Sidebar"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+bbcode_enabled = true
+
+[node name="CoverageLabel" type="Label" parent="Sidebar"]
+layout_mode = 2
+text = "Coverage: --"

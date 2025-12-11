@@ -1,0 +1,329 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2025-12-11T14:03:07.447Z",
+  "factions": [
+    {
+      "id": "verdant_eye",
+      "name": "Verdant Eye",
+      "stats": {
+        "move": 4,
+        "range": 5,
+        "aq": 1,
+        "defense": 7
+      },
+      "notes": "",
+      "requirements": [
+        "GR-005",
+        "GR-007"
+      ]
+    },
+    {
+      "id": "azure_blades",
+      "name": "Azure Blades",
+      "stats": {
+        "move": 5,
+        "range": 2,
+        "aq": 1,
+        "defense": 8
+      },
+      "notes": "Melee AQ +2 (replaces +1).",
+      "requirements": [
+        "GR-005",
+        "GR-007",
+        "GR-008"
+      ]
+    },
+    {
+      "id": "ember_guard",
+      "name": "Ember Guard",
+      "stats": {
+        "move": 2,
+        "range": 3,
+        "aq": 2,
+        "defense": 9
+      },
+      "notes": "",
+      "requirements": [
+        "GR-005",
+        "GR-007"
+      ]
+    },
+    {
+      "id": "grey_cloaks",
+      "name": "Grey Cloaks",
+      "stats": {
+        "move": 4,
+        "range": 3,
+        "aq": 0,
+        "defense": 8
+      },
+      "notes": "Reroll one attack die (ranged/melee), keep chosen result.",
+      "requirements": [
+        "GR-005",
+        "GR-007",
+        "GR-009"
+      ]
+    },
+    {
+      "id": "solar_wardens",
+      "name": "Solar Wardens",
+      "stats": {
+        "move": "1d6",
+        "range": 4,
+        "aq": 1,
+        "defense": 9
+      },
+      "notes": "Natural 11/12 instant kill (before AQ).",
+      "requirements": [
+        "GR-005",
+        "GR-007",
+        "GR-010",
+        "GR-011"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "id": "move",
+      "name": "Move",
+      "description": "Move up to Move stat; diagonals allowed unless blocked by terrain corners.",
+      "requirements": [
+        "GR-017",
+        "GR-018",
+        "DA-004"
+      ]
+    },
+    {
+      "id": "attack",
+      "name": "Attack",
+      "description": "Half move (rounded up) then Shoot; check Range/LoS/Cover.",
+      "requirements": [
+        "GR-019",
+        "GR-021.1",
+        "GR-022",
+        "DA-005",
+        "DA-012"
+      ]
+    },
+    {
+      "id": "melee",
+      "name": "Melee",
+      "description": "Half move (rounded up) then adjacent melee roll.",
+      "requirements": [
+        "GR-019",
+        "GR-027",
+        "DA-012"
+      ]
+    },
+    {
+      "id": "first_aid",
+      "name": "First Aid",
+      "description": "Half move (rounded up) then aid adjacent Down unit; stand up and may activate if budget remains.",
+      "requirements": [
+        "GR-020",
+        "GR-029",
+        "DA-007"
+      ]
+    },
+    {
+      "id": "hold",
+      "name": "Hold Position",
+      "description": "Do nothing; preserves activation; used for demo smoke.",
+      "requirements": [
+        "GR-021"
+      ]
+    }
+  ],
+  "missions": [
+    {
+      "id": "crossfire_clash",
+      "name": "Crossfire Clash",
+      "summary": "1 point per kill, most points wins.",
+      "scoring": "Per-round: +1 per kill; most points wins after round limit.",
+      "per_round_deltas": [
+        "+1 per kill each round"
+      ],
+      "requirements": [
+        "GR-033",
+        "GR-035",
+        "DA-008",
+        "DA-009",
+        "DA-016"
+      ]
+    },
+    {
+      "id": "control_center",
+      "name": "Control Center",
+      "summary": "Most units in center band.",
+      "scoring": "Per-round: +1 per control.",
+      "per_round_deltas": [
+        "+1 per round for most units in center band"
+      ],
+      "requirements": [
+        "GR-033",
+        "GR-035",
+        "DA-008",
+        "DA-009",
+        "DA-016"
+      ]
+    },
+    {
+      "id": "break_through",
+      "name": "Break Through",
+      "summary": "More units in opponent home zone.",
+      "scoring": "Per-round: +1 for more units in opponent home zone.",
+      "per_round_deltas": [
+        "+1 per round for more units in opponent home zone"
+      ],
+      "requirements": [
+        "GR-033",
+        "GR-035",
+        "DA-008",
+        "DA-009",
+        "DA-016"
+      ]
+    },
+    {
+      "id": "dead_center",
+      "name": "Dead Center",
+      "summary": "Control the central square.",
+      "scoring": "Per-round: +1 per control.",
+      "per_round_deltas": [
+        "+1 per round for controlling center point"
+      ],
+      "requirements": [
+        "GR-033",
+        "GR-035",
+        "DA-008",
+        "DA-009",
+        "DA-016"
+      ]
+    },
+    {
+      "id": "dead_zone",
+      "name": "Dead Zone",
+      "summary": "Prevent enemy units in center band.",
+      "scoring": "Per-round: prevent enemy in zone for +1.",
+      "per_round_deltas": [
+        "+1 per round if enemy absent from center band"
+      ],
+      "requirements": [
+        "GR-033",
+        "GR-035",
+        "DA-008",
+        "DA-009",
+        "DA-016"
+      ]
+    },
+    {
+      "id": "occupy",
+      "name": "Occupy",
+      "summary": "Sector nearest opponent grants +3; sector B +1.",
+      "scoring": "Per-round: +1 per control; +3 nearest opponent.",
+      "per_round_deltas": [
+        "+1 per sector controlled; +1 sector B; +3 nearest opponent sector"
+      ],
+      "requirements": [
+        "GR-033",
+        "GR-035",
+        "DA-008",
+        "DA-009",
+        "DA-016"
+      ]
+    }
+  ],
+  "optional_rules": {
+    "commander_traits": [
+      {
+        "id": "resilient",
+        "name": "Resilient",
+        "effect": "Ignore first Down in battle.",
+        "requirements": [
+          "GR-041",
+          "DA-020"
+        ]
+      },
+      {
+        "id": "sniper",
+        "name": "Sniper",
+        "effect": "Ignore cover when shooting.",
+        "requirements": [
+          "GR-041",
+          "DA-020"
+        ]
+      },
+      {
+        "id": "stealth",
+        "name": "Stealth",
+        "effect": "Cannot be targeted if in cover.",
+        "requirements": [
+          "GR-041",
+          "DA-020"
+        ]
+      }
+    ],
+    "battle_events": [
+      {
+        "id": "fog_of_war",
+        "name": "Fog of War",
+        "effect": "Max shoot range 3.",
+        "requirements": [
+          "GR-042",
+          "DA-019",
+          "DA-020"
+        ]
+      },
+      {
+        "id": "deadly_rounds",
+        "name": "Deadly Rounds",
+        "effect": "Natural 11/12 (Solar also 10) instant kill.",
+        "requirements": [
+          "GR-042",
+          "DA-019",
+          "DA-020"
+        ]
+      },
+      {
+        "id": "fast_assault",
+        "name": "Fast Assault",
+        "effect": "All units +1 Move.",
+        "requirements": [
+          "GR-042",
+          "DA-019",
+          "DA-020"
+        ]
+      },
+      {
+        "id": "focused_fire",
+        "name": "Focused Fire",
+        "effect": "Shoot without move gains +1 AQ.",
+        "requirements": [
+          "GR-042",
+          "DA-019",
+          "DA-020"
+        ]
+      },
+      {
+        "id": "revive",
+        "name": "Revive",
+        "effect": "Revive a Down unit at end of a round once per game.",
+        "requirements": [
+          "GR-042",
+          "DA-019",
+          "DA-020"
+        ]
+      },
+      {
+        "id": "no_event",
+        "name": "No Event",
+        "effect": "No event applies.",
+        "requirements": [
+          "GR-042",
+          "DA-019",
+          "DA-020"
+        ]
+      }
+    ]
+  },
+  "glossary": []
+}

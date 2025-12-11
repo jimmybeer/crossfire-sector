@@ -59,10 +59,46 @@ Module Interactions:
 - Persistence Format (CP-005, MP-006): JSON/tres save containing seed, command list, current state hash, mission/event selection, campaign standings, advantages chosen (GR-040), used missions list (GR-039, DA-015).
 - Persistence Policies (CP-005, CP-007): 5–10 campaign slots per profile; 3–5 quick slots for single matches. Save targets ≤256 KB per match; ≤512 KB per campaign; gzip only if above target and keep version hashes. One active loaded match at a time; optional support for up to 2–3 concurrently loaded sessions with background pause. Atomic writes (temp + rename), checksum per save, and free-space checks before write.
 - UI Contracts (DA-004–DA-012):
-  - State Snapshot DTOs for rendering grid, cover highlights, valid move/attack tiles.
-  - Event Stream for dice results, crits/fails, score changes.
-  - Preview API: Validator exposes reachable tiles and valid targets without committing state.
-  - Rules Reference/Glossary feed: structured JSON/tres generated from rules/requirements/data dictionary drives an in-game reference panel; UI consumes read-only content so gameplay logic stays centralized.
+  - UI Snapshot DTO (Stage 1 frozen; GR-001–GR-045, DA-001–DA-021, AQ-001–AQ-004):
+    | Field | Type | Required | Notes | Requirements |
+    | --- | --- | --- | --- | --- |
+    | version | string | yes | Snapshot schema version | AQ-003–AQ-004 |
+    | board | object | yes | `{columns:int, rows:int}` | GR-001, DA-004 |
+    | units | array | yes | `[{id, owner_id, position{col,row}, status, cover?, in_range?, activated?}]` | GR-005–GR-030, GR-045, DA-003–DA-007, DA-012, DA-018 |
+    | terrain | array | yes | `[{template_id, cells:[{col,row}]}]` | GR-002–GR-004, GR-018, GR-031, DA-004–DA-005 |
+    | reachability | array | no | `[{col,row,color?,name?}]` (includes half-move labels) | GR-018–GR-020, DA-004 |
+    | los | array | no | `[{from,to,visible,path?,blocker?,rays?}]`; `rays[]` present by default for diagnostics | GR-004, GR-031, DA-005, DA-021 |
+    | cover_sources | array | no | `[{col,row,kind}]` | GR-004, DA-005 |
+    | activation | object | yes | `{round:int, active_player:string, remaining:int}` | GR-013–GR-017, GR-043–GR-044, DA-003 |
+    | mission | object | yes | `{mission_id:string, scores:{p1:int,p2:int}, round:int}` | GR-033–GR-035.1, DA-008–DA-009, DA-016 |
+    | campaign | object | yes | `{battle_index:int, total_battles:int, scores:{p1:int,p2:int}, advantages:[string]}` | GR-036–GR-040, DA-009, DA-015–DA-017 |
+    | options | object | yes | `{commander:bool, events:bool, quick_start_used:bool, revive_used:bool}` | GR-041–GR-042, DA-010, DA-017, DA-019–DA-020, AQ-006 |
+    | rng | object | yes | `{seed:string, offset:int}` | AQ-003–AQ-004, MP-005 |
+    | logs | array | yes | Strings or structured entries `{type,message,requirements?,timestamp?,severity?}` | DA-013, MP-004 |
+    | errors | array | no | `[{code:string,message:string,requirement_id?:string}]` | DA-001–DA-007 |
+    | hash | string | no | State hash for determinism evidence | AQ-003, MP-005 |
+  - UI Event DTO (Stage 1 frozen; GR-022–GR-028, GR-031, GR-033–GR-035.1, DA-006, DA-013):
+    | Field | Type | Required | Notes | Requirements |
+    | --- | --- | --- | --- | --- |
+    | type | string | yes | Event kind (dice_roll, attack_resolved, melee_resolved, mission_score, campaign_score, error, log_line, etc.) | DA-006, DA-013 |
+    | payload | object | yes | Event-specific data (dice, attacker/target ids, damage, hashes) | GR-022–GR-028, GR-033–GR-035.1 |
+    | requirements | array\<string> | yes | Traceability IDs | GR/DA coverage |
+    | severity | string | yes | Enum: info/warning/error | DA-006, DA-013 |
+    | timestamp | int | no | Optional epoch ms for logs/telemetry | DA-013 |
+    | event_seq | int | no | Optional monotonic sequence for ordering | AQ-003, MP-003 |
+  - Preview API: Validator exposes `preview.reachable_tiles` and valid targets without committing state; adapters map validation errors to UI error DTOs. For LoS raycast diagnostics (preferred bounding-box approach), preview payload MAY include `rays:[{from:Vector2,to:Vector2,blocked:bool,blocker?:{col,row,kind}}]` (GR-031, DA-005).
+  - Rules Reference/Glossary feed: `docs/data-definition/exports/ui_reference.json` (version, factions[], actions[], missions[], optional_rules) generated via `tools/build_ui_reference.js`; UI panels consume read-only content so gameplay logic stays centralized.
+
+  - Mapping guide (Validator/Resolver → UI DTOs):
+    - `reachable_tiles` → `reachability`; add `name` (e.g., `"half-move"`) if needed for half-move previews (GR-019/020).
+    - `valid_targets`/range checks → `units[].in_range` and/or a `targets` helper list in the action picker (GR-021.1).
+    - LoS/cover preview → `los[...]`, `cover_sources[...]`, `units[].cover`; optional `rays[...]` for raycast debug (GR-031, GR-004, DA-005).
+    - Activation legality → `activation.remaining`, `units[].activated` (GR-015–GR-017).
+    - Errors → `errors[{code,message,requirement_id?}]` and `event{type:"error"}` (DA-001–DA-007).
+    - Dice/attack/melee outcomes → `event{type:"dice_roll"/"attack_resolved"/"melee_resolved"}` and `units[].status` updates (GR-022–GR-028).
+    - Mission/campaign scoring → `mission{scores,round}`, `campaign{scores,advantages}` with `event{type:"mission_score"/"campaign_score"}` (GR-033–GR-040).
+    - Optional rules usage → `options{commander,events,quick_start_used,revive_used}` (GR-041–GR-042, DA-017/019/020).
+    - Determinism → `rng{seed,offset}` and optional `hash`; consider `event_seq` if telemetry/replay needs ordering (AQ-003/004, MP-003/005).
 - Cross-Cutting:
   - Logging (DA-006, DA-013): Structured logs per command with dice rolls, RNG offsets, validation decisions.
   - Error handling: Validator returns typed errors for illegal commands; UI surfaces messages.
@@ -75,6 +111,30 @@ Module Interactions:
   - Golden-record tests for faction traits and optional commander/event toggles.
   - Interfaces & Test Seams: Validator interface `validate(command, state, data_config) -> ValidationResult {ok, errors[], preview{reachable_tiles, valid_targets}}` with unit tests for deployment zones/row distribution (GR-012, DA-001), movement/impassable/diagonal corner checks plus pass-through occupied squares (GR-018, GR-032, GR-032.1, DA-004), activation limits (GR-015–GR-017, DA-003), attack half-move enforcement before Shoot/Melee (GR-019), LoS/range/cover legality (GR-031, GR-004, GR-021.1, DA-005), reroll caps (GR-045, DA-018), mandatory campaign Winner's Advantage selection (GR-040), optional commander/events toggles (GR-041–GR-042). RNG interface `Rng(seed, offset=0)` with `roll_d6`, `roll_2d6`, `advance(n)`, `snapshot/restore`; property tests ensure identical seeds + commands produce identical rolls (AQ-003, MP-005), offsets track calls, and snapshot/restore serialize in saves. Mission/Scoring interface `score_round(state, mission_config)` and `evaluate_control(state)`; tests for mission objectives and no-point ties (GR-033, GR-035.1), Occupy bonuses, tie-triggered extra rounds (GR-035), mission uniqueness (GR-039), advantages persistence (GR-040), per-battle points (GR-038). Integration tests cover round loop (GR-013–GR-016, GR-043–GR-044), Down/First Aid immediate activation (GR-029–GR-030, DA-007), commander/events effects (GR-041–GR-042, DA-019–DA-020). Perf micro-benchmarks for LoS caching and activation timing on target devices.
 
+## UI Scenes & Input Map (Stage 1)
+- Scenes under `project/src/ui/scenes/`:
+  - `battlefield_view.tscn` (`battlefield_view.gd`): grid layers (tiles/reachability/LoS rays/units), status/log labels; consumes snapshot `board`, `units`, `terrain`, `reachability`, `los` (with `rays`), `cover_sources`, `activation`, `mission`, `campaign`, `options`, `rng`, `logs`, `errors`. Signals: `cell_selected(col,row)`, `unit_selected(unit_id)`, `command_requested(command_dict)`.
+  - `action_picker.tscn` (`action_picker.gd`): OptionButton for actions; consumes `units[].status/in_range`, `activation.remaining`, `options`; signals `action_chosen(action_id)`, `target_requested`.
+  - `dice_panel.tscn` (`dice_panel.gd`): RichTextLabel for dice/result events; consumes event stream entries; no signals.
+  - `log_viewer` (panel within battlefield/log): consumes `logs`, `errors`, event stream; optional `log_scrolled` signal.
+  - `reference_panel.tscn` (`reference_panel.gd`): loads `docs/data-definition/exports/ui_reference.json` (`factions`, `actions`, `missions` with `per_round_deltas`, `optional_rules`, `glossary`, `localizations`); signals `reference_loaded`, `reference_failed`.
+  - `stage01_slice.tscn` (`stage01_slice.gd`): composes the above, uses `UISliceLoader` to load canonical fixture `docs/data-definition/fixtures/save_match.json`.
+  - Prototypes: `los_test_slice.tscn`/`.gd` and `los_bbox_slice.tscn`/`.gd` for LoS/cover visualization using `los.rays`, `reachability`.
+  - Placeholder assets: colored sprites/tiles for units/terrain, Line2D for rays, basic icons for actions; no binary assets required.
+- Desktop input map → Command DTOs (Stage 1):
+  - Pointer LMB select: select unit/cell (UI-only selection).
+  - Pointer LMB confirm on highlighted target: emit command `{type:"move"/"attack"/"melee"/"first_aid"/"hold", payload:{...}}` via command bus.
+  - Right-click or ESC: cancel selection (UI-only).
+  - Keyboard bindings (`ui_input_map.gd`):
+    - `A`/`1`: Move
+    - `S`/`2`: Attack
+    - `D`/`3`: Melee
+    - `F`/`4`: First Aid
+    - `H`/`0`: Hold
+    - `R`: Reroll (with die selection in payload)
+    - `Q`: Quick Start Move (when available)
+    - `Ctrl+Z`: undo UI selection (no game-state undo in Stage 1)
+- Touch/mobile bindings deferred unless CP-001 parity is requested now.
 ## 4. Technology Alignment
 - Engine: Godot 4.x scenes for UI/rendering; rules engine and command bus in GDScript/C# modules separated from scene tree (AQ-001).
 - Data: JSON/tres configs for factions/missions/terrain/events (AQ-002); loaded at startup and cached.
