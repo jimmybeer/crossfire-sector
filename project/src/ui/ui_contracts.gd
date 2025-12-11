@@ -15,25 +15,37 @@ const SNAPSHOT_VERSION := "1.0.0"
 
 ## Public: Build a render-ready snapshot DTO for the battlefield view.
 static func snapshot(
-    board: Dictionary,
-    units: Array,
-    reachability: Array,
-    activation: Dictionary,
-    mission: Dictionary,
-    campaign: Dictionary,
-    logs: Array,
-    errors: Array = []
+    board: Dictionary = {},
+    units: Array = [],
+    terrain: Array = [],
+    reachability: Array = [],
+    los: Array = [],
+    cover_sources: Array = [],
+    activation: Dictionary = {},
+    mission: Dictionary = {},
+    campaign: Dictionary = {},
+    options: Dictionary = {},
+    rng: Dictionary = {},
+    logs: Array = [],
+    errors: Array = [],
+    state_hash: String = ""
 ) -> Dictionary:
     return {
         "version": SNAPSHOT_VERSION,
         "board": board,
         "units": units,
+        "terrain": terrain,
         "reachability": reachability,
+        "los": los,
+        "cover_sources": cover_sources,
         "activation": activation,
         "mission": mission,
         "campaign": campaign,
+        "options": options,
+        "rng": rng,
         "logs": logs,
-        "errors": errors
+        "errors": errors,
+        "hash": state_hash
     }
 
 

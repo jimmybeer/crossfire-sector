@@ -22,7 +22,9 @@ var loader_state: Dictionary
 
 
 ## Public: Initialize loader with Stage 0 services and UI adapter.
-func _init(data_config: Dictionary = {}, rng_seed: int = 0, initial_state: Dictionary = {}) -> void:
+func _init(
+    data_config: Dictionary = {}, rng_seed: Variant = 0, initial_state: Dictionary = {}
+) -> void:
     loader_adapter = UIAdapter.new()
     loader_bus = UICommandBus.new(
         CommandValidator.new(), RNGService.new(rng_seed), data_config, loader_adapter, initial_state

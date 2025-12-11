@@ -11,6 +11,7 @@ const FIXTURES = [
   "docs/data-definition/fixtures/command_log.json",
   "docs/data-definition/fixtures/match_state.json",
   "docs/data-definition/fixtures/commands.json",
+  "docs/data-definition/exports/ui_reference.json",
 ];
 
 const errors = [];
@@ -81,10 +82,46 @@ function validateCommandsList() {
   data.forEach((cmd, idx) => validateCommand(cmd, idx, "commands"));
 }
 
+function validateUIReference() {
+  const data = readJson(FIXTURES[4]);
+  if (!data) return;
+  if (typeof data.version !== "string") errors.push("ui_reference.version missing/string");
+  ["factions", "actions", "missions"].forEach((key) => {
+    if (!Array.isArray(data[key])) errors.push(`ui_reference.${key} missing/array`);
+  });
+  const optionalRules = data.optional_rules || {};
+  if (!Array.isArray(optionalRules.commander_traits || []))
+    errors.push("ui_reference.optional_rules.commander_traits missing/array");
+  if (!Array.isArray(optionalRules.battle_events || []))
+    errors.push("ui_reference.optional_rules.battle_events missing/array");
+  const gloss = data.glossary;
+  if (gloss && !Array.isArray(gloss)) errors.push("ui_reference.glossary must be array if present");
+  const validateEntry = (entry, source) => {
+    if (typeof entry.id !== "string") errors.push(`${source}.id missing/string`);
+    if (typeof entry.name !== "string" && typeof entry.title !== "string")
+      errors.push(`${source}.name/title missing/string`);
+    if (entry.requirements && !Array.isArray(entry.requirements))
+      errors.push(`${source}.requirements must be array when present`);
+    if (entry.per_round_deltas && !Array.isArray(entry.per_round_deltas))
+      errors.push(`${source}.per_round_deltas must be array when present`);
+  };
+  data.factions?.forEach((e, idx) => validateEntry(e, `ui_reference.factions[${idx}]`));
+  data.actions?.forEach((e, idx) => validateEntry(e, `ui_reference.actions[${idx}]`));
+  data.missions?.forEach((e, idx) => validateEntry(e, `ui_reference.missions[${idx}]`));
+  optionalRules.commander_traits?.forEach((e, idx) =>
+    validateEntry(e, `ui_reference.optional_rules.commander_traits[${idx}]`)
+  );
+  optionalRules.battle_events?.forEach((e, idx) =>
+    validateEntry(e, `ui_reference.optional_rules.battle_events[${idx}]`)
+  );
+  gloss?.forEach((e, idx) => validateEntry(e, `ui_reference.glossary[${idx}]`));
+}
+
 validateSaveMatch();
 validateCommandLogFixture();
 validateMatchState();
 validateCommandsList();
+validateUIReference();
 
 if (errors.length) {
   console.error("[schema-validate] FAIL");
