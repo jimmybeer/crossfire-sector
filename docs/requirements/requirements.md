@@ -18,7 +18,8 @@
 # Game Rule Requirements (Physical Rules → Digital Rules)
 Setup & Terrain (from Basics, Terrain & Cover)
 - GR-001: The system shall create a battlefield of 15 columns by 9 rows.
-- GR-002: The system shall randomly place 3–5 terrain pieces sized 1–4 squares before deployment.
+- GR-002: The system shall randomly place 3–5 terrain pieces before deployment.
+- GR-002.1: Each terrain piece shall occupy 1–4 orthogonally adjacent squares in any orientation; shapes may vary but must remain a single connected group.
 - GR-003: The system shall treat terrain as blocking LoS, providing cover, and impassable by default, with provision for future per-piece flags.
 - GR-004: The system shall apply +1 Defense to units in cover (≥50% obscured).
 

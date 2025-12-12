@@ -52,7 +52,7 @@ Choose or roll for mission. If a mission is tied at the end of round 6 — play 
 | 6 | Occupy | Control the most of the 4 sectors with at least one unit (split battlefield into 4 equally sized sectors). |
 
 ## Terrain & Cover
-- Each game includes 4–5 pieces of terrain (2–4 square size) that can block LoS and/or give Cover.
+- Each game includes 3–5 pieces of terrain (1–4 squares, orthogonally adjacent in any shape) that can block LoS and/or give Cover. (The earlier 4–5 pieces of size 2–4 text was a typo.)
 - **Cover:** If 50%+ of a unit is hidden by terrain, it gains **+1 Defense**.
 
 ## Campaign Mode — *Operation Crossfire*

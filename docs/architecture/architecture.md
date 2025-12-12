@@ -58,6 +58,12 @@ Module Interactions:
 - RNG Service (AQ-004, MP-005): Central seeded RNG; all random ops (terrain placement, initiative, attacks) pull sequential values; exposes seed/offset for replay.
 - Persistence Format (CP-005, MP-006): JSON/tres save containing seed, command list, current state hash, mission/event selection, campaign standings, advantages chosen (GR-040), used missions list (GR-039, DA-015).
 - Persistence Policies (CP-005, CP-007): 5–10 campaign slots per profile; 3–5 quick slots for single matches. Save targets ≤256 KB per match; ≤512 KB per campaign; gzip only if above target and keep version hashes. One active loaded match at a time; optional support for up to 2–3 concurrently loaded sessions with background pause. Atomic writes (temp + rename), checksum per save, and free-space checks before write.
+- Reconnection/Resume Flow (MP-006): Networking Adapter manages disconnects via session tokens, command sequence checkpoints, and deterministic replay.
+  - Handshake: client sends session token, last acknowledged command sequence, and last known state hash; server validates token and sequence window before accepting.
+  - Resend: server streams missed commands from CommandLog starting at seq = last_acked + 1; client replays them deterministically using the shared RNG seed and advances RNG offset to the replayed command count.
+  - Hash check: after replay, client and server compare state hashes; on mismatch, server issues a full state snapshot plus current command log head and RNG seed/offset to rehydrate, then replays deltas.
+  - Gating: client blocks new inputs until hashes align; after repeated mismatches, force full snapshot restore and rotate the session token.
+  - Integrity: CommandBus tracks `event_seq`/hash per command batch; Networking Adapter may add lightweight checksums to detect tampering before applying.
 - UI Contracts (DA-004–DA-012):
   - UI Snapshot DTO (Stage 1 frozen; GR-001–GR-045, DA-001–DA-021, AQ-001–AQ-004):
     | Field | Type | Required | Notes | Requirements |

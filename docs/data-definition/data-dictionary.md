@@ -27,6 +27,7 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 - [NetworkingSession](#networkingsession)
 - [CosmeticSkin](#cosmeticskin)
 - [TelemetryEvent](#telemetryevent)
+- [UIReferenceExport](#uireferenceexport)
 - [Validation & Gap Analysis](#validation--gap-analysis)
 - [Summary & Evaluation](#summary--evaluation)
 
@@ -512,11 +513,14 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 | id | string | yes | - | Unique log id. |
 | commands | array\<Command\> | yes | [] | Ordered by `sequence`. |
 | hash | string | no | null | Optional checksum for tamper detection. |
+| last_acked_command_seq | int | no | 0 | Highest seq confirmed by client for reconnect. |
+| last_known_state_hash | string | no | null | Client hash at last ack to validate replay. |
 | version | string | yes | 1.0.0 | Semantic per-entity version. |
 
 **Relationships**
 - Referenced by [MatchState](#matchstate); supports Persistence Service and replay.
 - Uses [Command](#command) items.
+- Sync fields align with [NetworkingSession](#networkingsession) for MP-006.
 
 **Versioning & Migration**
 - v1.0.0 baseline; adding compression or chunking is additive; maintain backward-compatible command list.
@@ -606,11 +610,14 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 | rng | object | yes | - | [RNGSeed](#rngseed). |
 | command_log_id | string | yes | - | References [CommandLog](#commandlog). |
 | status | string | yes | active | Enum: active, completed. |
+| last_acked_command_seq | int | no | 0 | Sync hint for reconnect; mirrors CommandLog/NetworkingSession. |
+| last_known_state_hash | string | no | null | Client-reported hash at last ack; used for validation. |
 | version | string | yes | 1.0.0 | Semantic per-entity version. |
 
 **Relationships**
 - Aggregates [BoardLayout](#boardlayout), [TerrainTemplate](#terraintemplate) instances, [MissionDefinition](#missiondefinition), [PlayerState](#playerstate), [UnitState](#unitstate), [RoundState](#roundstate), [CommandLog](#commandlog), [RNGSeed](#rngseed), [BattleEvent](#battleevent), [OptionalRulesConfig](#optionalrulesconfig).
 - Linked to [SaveSlot](#saveslot) for persistence.
+- Sync fields align with [NetworkingSession](#networkingsession) and [CommandLog](#commandlog) for MP-006 reconnect.
 
 **Versioning & Migration**
 - v1.0.0 baseline; migration strategy: add fields additively; when removing/changing enums, supply mapping; store per-field defaults to allow forward/backward compatibility.
@@ -1051,7 +1058,7 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 
 ## NetworkingSession
 [Back to TOC](#linked-table-of-contents)
-**Purpose:** (Future) Metadata for multiplayer sessions to align command replication and state sync.
+**Purpose:** Metadata for multiplayer sessions to align command replication, reconnection, and deterministic state sync.
 
 **Schema**
 | Field | Type | Required | Default | Constraints/Notes |
@@ -1060,14 +1067,17 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
 | match_id | string | yes | - | References [MatchState](#matchstate). |
 | host | string | yes | - | Host peer id/address. |
 | peers | array\<string\> | yes | [] | Connected peer ids. |
+| session_token | string | yes | - | Opaque token for reconnect authentication. |
+| last_acked_command_seq | int | yes | 0 | Highest command seq acknowledged by client. |
 | state_hash | string | yes | - | Latest authoritative hash. |
-| version | string | yes | 0.1.0 | Pre-release optional entity. |
+| resume_window | int | yes | 0 | Max commands to resend on reconnect before forcing snapshot. |
+| version | string | yes | 1.0.0 | Schema aligns to MP-006 reconnection flow. |
 
 **Relationships**
-- Wraps [MatchState](#matchstate) for networking adapter.
+- Wraps [MatchState](#matchstate) for networking adapter; aligns with [CommandLog](#commandlog) seqs and state hashes.
 
 **Versioning & Migration**
-- 0.1.0 placeholder; extend when MP built.
+- 1.0.0 adds reconnection fields for MP-006. Future changes must keep backward-compatible token/seq defaults.
 
 **Traceability**
 - Requirements: MP-001–MP-006.
@@ -1169,6 +1179,57 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
   "payload": {"factions": ["azure_blades", "ember_guard"], "mission": "occupy"},
   "anonymized": true,
   "version": "0.1.0"
+}
+```
+
+---
+
+## UIReferenceExport
+[Back to TOC](#linked-table-of-contents)
+**Purpose:** Defines the generated reference bundle (`docs/data-definition/exports/ui_reference.json`) used by UI/reference panels to display rules-aligned data (DA-014) without hardcoded strings.
+
+**Schema**
+| Field | Type | Required | Default | Constraints/Notes |
+| --- | --- | --- | --- | --- |
+| version | string | yes | - | Export schema version; matches tool output. |
+| factions | array\<object> | yes | [] | Name/stats/traits pulled from FactionDefinition; read-only. |
+| actions | array\<object> | yes | [] | Core actions (Move, Attack, Melee, First Aid, Hold) with rules text. |
+| missions | array\<object> | yes | [] | Mission names/objectives/control zones from MissionDefinition. |
+| optional_rules | object | yes | {} | Commander traits, battle events, campaign toggles, advantages. |
+| glossary | array\<object> | yes | [] | Key terms (Move, Range, AQ, Defense, cover, LoS, Down, etc.). |
+| localization | object | no | {} | Optional localized strings keyed by locale. |
+| generated_at | string | no | null | ISO8601 timestamp of export. |
+
+**Relationships**
+- Populated from FactionDefinition, MissionDefinition, CommanderTrait, BattleEvent, AdvantageOption, OptionalRulesConfig, and glossary terms derived from requirements/rules.
+- Consumed by UI Reference/Glossary panels per architecture UI contracts.
+
+**Versioning & Migration**
+- v1.0.0 initial export schema; evolve additively (new fields optional). Keep backward-compatible keys for UI consumers.
+- Regenerate after data or requirement changes affecting reference content.
+
+**Traceability**
+- Requirements: DA-014 (in-game rules reference), DA-008–DA-009 (visible objectives/scoring), GR-005–GR-042 (factions, missions, optional rules).
+- Architecture: UI Reference/Glossary feed (Architecture §3 UI Contracts, reference_panel.tscn).
+
+**Sync Strategy**
+- Generated by tooling (e.g., `tools/build_ui_reference.js`) from authoritative JSON/data dictionary; do not hand-edit.
+- UI loads from `docs/data-definition/exports/ui_reference.json`; CI/agents should regenerate on data changes and validate against schema.
+
+**Open Questions / TODOs**
+- Add locale coverage when localization is prioritized.
+- Confirm whether actions should include preview metadata (e.g., half-move labels) in future revisions.
+
+**Example JSON**
+```json
+{
+  "version": "1.0.0",
+  "factions": [{"id": "azure_blades", "name": "Azure Blades", "move": 5, "range": 2, "aq": "+1", "defense": 8, "notes": "Melee AQ +2"}],
+  "actions": [{"id": "attack", "name": "Attack", "description": "Move up to half Move (rounded up), then Shoot or Melee."}],
+  "missions": [{"id": "occupy", "name": "Occupy", "objective": "Control sectors A/B/C; sector B +1; nearest opponent side +3."}],
+  "optional_rules": {"commander_traits": ["resilient", "sniper", "stealth"], "battle_events": ["fog_of_war", "deadly_rounds", "fast_assault", "focused_fire", "revive", "no_events"]},
+  "glossary": [{"term": "Cover", "definition": "If 50%+ of a unit is hidden by terrain, it gains +1 Defense."}],
+  "generated_at": "2025-12-11T00:00:00Z"
 }
 ```
 
