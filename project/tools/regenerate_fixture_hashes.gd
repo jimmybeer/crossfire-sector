@@ -30,26 +30,37 @@ func _initialize() -> void:
 
 ## Private: Walk fixture JSON payloads, recompute hashes using real resolver, and persist updates.
 func _regenerate() -> bool:
-    var save_path: String = ProjectSettings.globalize_path(
-        "res://../docs/data-definition/fixtures/save_match.json"
-    )
-    var commands_path: String = ProjectSettings.globalize_path(
-        "res://../docs/data-definition/fixtures/commands.json"
-    )
-    var command_log_path: String = ProjectSettings.globalize_path(
-        "res://../docs/data-definition/fixtures/command_log.json"
-    )
-    var match_state_path: String = ProjectSettings.globalize_path(
-        "res://../docs/data-definition/fixtures/match_state.json"
-    )
+    var fixture_paths: Dictionary = {
+        "save_match": ProjectSettings.globalize_path(
+            "res://docs/data-definition/fixtures/save_match.json"
+        ),
+        "commands": ProjectSettings.globalize_path(
+            "res://docs/data-definition/fixtures/commands.json"
+        ),
+        "command_log": ProjectSettings.globalize_path(
+            "res://docs/data-definition/fixtures/command_log.json"
+        ),
+        "match_state": ProjectSettings.globalize_path(
+            "res://docs/data-definition/fixtures/match_state.json"
+        ),
+        "match_state_crossfire": ProjectSettings.globalize_path(
+            "res://docs/data-definition/fixtures/match_state_crossfire_clash.json"
+        ),
+        "match_state_dead_zone": ProjectSettings.globalize_path(
+            "res://docs/data-definition/fixtures/match_state_dead_zone.json"
+        ),
+        "match_state_occupy": ProjectSettings.globalize_path(
+            "res://docs/data-definition/fixtures/match_state_occupy.json"
+        )
+    }
 
-    var payload: Dictionary = _load_json(save_path)
+    var payload: Dictionary = _load_json(fixture_paths["save_match"])
     if payload.is_empty() or not payload.has("match"):
-        push_error("[regen] Failed to load match payload from %s" % save_path)
+        push_error("[regen] Failed to load match payload from %s" % fixture_paths["save_match"])
         return false
 
     var match_block: Dictionary = payload["match"]
-    var commands: Array = _load_commands(commands_path, match_block)
+    var commands: Array = _load_commands(fixture_paths["commands"], match_block)
 
     var data_config: Dictionary = {
         "board_layout": {"columns": 15, "rows": 9, "home_zones": []},
@@ -73,17 +84,32 @@ func _regenerate() -> bool:
     match_block["rng"]["offset"] = rng.get_offset()
     payload["match"] = match_block
 
-    if not persistence_service_script.save_payload_atomic(save_path, payload).get("ok", false):
+    if not persistence_service_script.save_payload_atomic(
+        fixture_paths["save_match"], payload
+    ).get("ok", false):
         push_error("[regen] Failed to write save_match.json with checksums")
         return false
 
-    _write_json(commands_path, commands)
-    _write_json(command_log_path, match_block.get("command_log", {}))
+    _write_json(fixture_paths["commands"], commands)
+    _write_json(fixture_paths["command_log"], match_block.get("command_log", {}))
 
-    var match_state: Dictionary = _load_json(match_state_path)
+    var match_state: Dictionary = _load_json(fixture_paths["match_state"])
     if not match_state.is_empty():
         match_state["state_hash"] = match_block["state_hash"]
-        _write_json(match_state_path, match_state)
+        _write_json(fixture_paths["match_state"], match_state)
+
+    _propagate_hash(
+        fixture_paths["match_state_crossfire"],
+        match_block["state_hash"]
+    )
+    _propagate_hash(
+        fixture_paths["match_state_dead_zone"],
+        match_block["state_hash"]
+    )
+    _propagate_hash(
+        fixture_paths["match_state_occupy"],
+        match_block["state_hash"]
+    )
 
     print("[regen] Fixture hashes regenerated with real resolver state.")
     return true
@@ -103,6 +129,14 @@ func _write_json(path: String, value: Variant) -> void:
     if file:
         file.store_string(json_text)
         file.close()
+
+## Private: If a match_state fixture exists, stamp the provided hash.
+func _propagate_hash(path: String, state_hash: String) -> void:
+    var data: Dictionary = _load_json(path)
+    if data.is_empty():
+        return
+    data["state_hash"] = state_hash
+    _write_json(path, data)
 
 ## Private: Read commands from file or fallback to existing command_log entries.
 func _load_commands(path: String, match_block: Dictionary) -> Array:

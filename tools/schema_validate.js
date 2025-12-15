@@ -6,13 +6,24 @@
 const fs = require("fs");
 const path = require("path");
 
-const FIXTURES = [
-  "docs/data-definition/fixtures/save_match.json",
-  "docs/data-definition/fixtures/command_log.json",
-  "docs/data-definition/fixtures/match_state.json",
-  "docs/data-definition/fixtures/commands.json",
-  "docs/data-definition/exports/ui_reference.json",
-];
+const FIXTURES = {
+  save_match: "docs/data-definition/fixtures/save_match.json",
+  command_log: "docs/data-definition/fixtures/command_log.json",
+  match_state: "docs/data-definition/fixtures/match_state.json",
+  match_state_crossfire: "docs/data-definition/fixtures/match_state_crossfire_clash.json",
+  match_state_dead_zone: "docs/data-definition/fixtures/match_state_dead_zone.json",
+  match_state_occupy: "docs/data-definition/fixtures/match_state_occupy.json",
+  commands: "docs/data-definition/fixtures/commands.json",
+  optional_rules: "docs/data-definition/fixtures/optional_rules_config.json",
+  factions: "docs/data-definition/fixtures/factions.json",
+  missions: "docs/data-definition/fixtures/missions.json",
+  terrain_templates: "docs/data-definition/fixtures/terrain_templates.json",
+  commander_traits: "docs/data-definition/fixtures/commander_traits.json",
+  battle_events: "docs/data-definition/fixtures/battle_events.json",
+  advantages: "docs/data-definition/fixtures/advantages.json",
+  rng_seed: "docs/data-definition/fixtures/rng_seed.json",
+  ui_reference: "docs/data-definition/exports/ui_reference.json",
+};
 
 const errors = [];
 
@@ -48,7 +59,7 @@ function validateCommandLog(log, source) {
 }
 
 function validateSaveMatch() {
-  const data = readJson(FIXTURES[0]);
+  const data = readJson(FIXTURES.save_match);
   if (!data || !data.match) return;
   const match = data.match;
   if (!hasPrefix(match.state_hash, "sha256:"))
@@ -61,20 +72,25 @@ function validateSaveMatch() {
 }
 
 function validateCommandLogFixture() {
-  const data = readJson(FIXTURES[1]);
+  const data = readJson(FIXTURES.command_log);
   if (!data) return;
   validateCommandLog(data, "command_log");
 }
 
-function validateMatchState() {
-  const data = readJson(FIXTURES[2]);
+function validateMatchState(label, fixturePath) {
+  const data = readJson(fixturePath);
   if (!data) return;
   if (!hasPrefix(data.state_hash, "sha256:"))
-    errors.push("match_state.state_hash missing sha256 prefix");
+    errors.push(`${label}.state_hash missing sha256 prefix`);
+  const optional = data.optional_rules || {};
+  ["commander", "events", "campaign"].forEach((flag) => {
+    if (typeof optional[flag] !== "boolean")
+      errors.push(`${label}.optional_rules.${flag} missing/boolean`);
+  });
 }
 
 function validateCommandsList() {
-  const data = readJson(FIXTURES[3]);
+  const data = readJson(FIXTURES.commands);
   if (!Array.isArray(data)) {
     errors.push("commands.json must be an array");
     return;
@@ -83,7 +99,7 @@ function validateCommandsList() {
 }
 
 function validateUIReference() {
-  const data = readJson(FIXTURES[4]);
+  const data = readJson(FIXTURES.ui_reference);
   if (!data) return;
   if (typeof data.version !== "string") errors.push("ui_reference.version missing/string");
   ["factions", "actions", "missions"].forEach((key) => {
@@ -117,10 +133,113 @@ function validateUIReference() {
   gloss?.forEach((e, idx) => validateEntry(e, `ui_reference.glossary[${idx}]`));
 }
 
+function validateOptionalRules() {
+  const data = readJson(FIXTURES.optional_rules);
+  if (!data) return;
+  ["commander", "events", "campaign"].forEach((key) => {
+    if (typeof data[key] !== "boolean") errors.push(`optional_rules.${key} must be boolean`);
+  });
+  ["commander", "events", "campaign"].forEach((key) => {
+    if (data[key] !== false) errors.push(`optional_rules.${key} must default to false`);
+  });
+  if (typeof data.version !== "string") errors.push("optional_rules.version missing/string");
+}
+
+function validateFactions() {
+  const data = readJson(FIXTURES.factions);
+  if (!Array.isArray(data)) {
+    errors.push("factions.json must be an array");
+    return;
+  }
+  data.forEach((fac, idx) => {
+    const prefix = `factions[${idx}]`;
+    if (typeof fac.id !== "string") errors.push(`${prefix}.id missing/string`);
+    if (typeof fac.name !== "string") errors.push(`${prefix}.name missing/string`);
+    if (typeof fac.roster_limit !== "number") errors.push(`${prefix}.roster_limit missing/number`);
+    if (typeof fac.movement_mode !== "string") errors.push(`${prefix}.movement_mode missing/string`);
+    if (!Array.isArray(fac.traits)) errors.push(`${prefix}.traits missing/array`);
+    if (typeof fac.version !== "string") errors.push(`${prefix}.version missing/string`);
+    const base = fac.base_stats || {};
+    ["range", "aq", "defense"].forEach((stat) => {
+      if (typeof base[stat] !== "number") errors.push(`${prefix}.base_stats.${stat} missing/number`);
+    });
+    if (typeof base.move !== "number" && typeof base.move !== "string")
+      errors.push(`${prefix}.base_stats.move must be number or dice string`);
+  });
+}
+
+function validateMissions() {
+  const data = readJson(FIXTURES.missions);
+  if (!Array.isArray(data)) return;
+  data.forEach((mis, idx) => {
+    const prefix = `missions[${idx}]`;
+    if (typeof mis.id !== "string") errors.push(`${prefix}.id missing/string`);
+    if (typeof mis.name !== "string") errors.push(`${prefix}.name missing/string`);
+    if (!Array.isArray(mis.control_zones)) errors.push(`${prefix}.control_zones missing/array`);
+    if (typeof mis.scoring_rules !== "object") errors.push(`${prefix}.scoring_rules missing/object`);
+    if (typeof mis.round_limit !== "number") errors.push(`${prefix}.round_limit missing/number`);
+    if (typeof mis.max_extra_rounds !== "number")
+      errors.push(`${prefix}.max_extra_rounds missing/number`);
+    if (typeof mis.unique_per_campaign !== "boolean")
+      errors.push(`${prefix}.unique_per_campaign missing/boolean`);
+    if (typeof mis.version !== "string") errors.push(`${prefix}.version missing/string`);
+  });
+}
+
+function validateTerrainTemplates() {
+  const data = readJson(FIXTURES.terrain_templates);
+  if (!Array.isArray(data)) return;
+  data.forEach((ter, idx) => {
+    const prefix = `terrain_templates[${idx}]`;
+    if (typeof ter.id !== "string") errors.push(`${prefix}.id missing/string`);
+    if (typeof ter.name !== "string") errors.push(`${prefix}.name missing/string`);
+    const size = ter.size_range || {};
+    if (typeof size.min !== "number") errors.push(`${prefix}.size_range.min missing/number`);
+    if (typeof size.max !== "number") errors.push(`${prefix}.size_range.max missing/number`);
+    ["blocks_los", "provides_cover", "impassable"].forEach((flag) => {
+      if (typeof ter[flag] !== "boolean") errors.push(`${prefix}.${flag} must be boolean`);
+    });
+    if (typeof ter.placement_weight !== "number")
+      errors.push(`${prefix}.placement_weight missing/number`);
+    if (typeof ter.version !== "string") errors.push(`${prefix}.version missing/string`);
+  });
+}
+
+function validateSimpleList(fixturePath, label, fields) {
+  const data = readJson(fixturePath);
+  if (!Array.isArray(data)) return;
+  data.forEach((entry, idx) => {
+    const prefix = `${label}[${idx}]`;
+    fields.forEach((field) => {
+      if (typeof entry[field] !== "string") errors.push(`${prefix}.${field} missing/string`);
+    });
+    if (typeof entry.version !== "string") errors.push(`${prefix}.version missing/string`);
+  });
+}
+
+function validateRngSeed() {
+  const data = readJson(FIXTURES.rng_seed);
+  if (!data) return;
+  if (typeof data.seed !== "string") errors.push("rng_seed.seed missing/string");
+  if (typeof data.offset !== "number") errors.push("rng_seed.offset missing/number");
+  if (typeof data.version !== "string") errors.push("rng_seed.version missing/string");
+}
+
 validateSaveMatch();
 validateCommandLogFixture();
-validateMatchState();
+validateMatchState("match_state", FIXTURES.match_state);
+validateMatchState("match_state_crossfire_clash", FIXTURES.match_state_crossfire);
+validateMatchState("match_state_dead_zone", FIXTURES.match_state_dead_zone);
+validateMatchState("match_state_occupy", FIXTURES.match_state_occupy);
 validateCommandsList();
+validateOptionalRules();
+validateFactions();
+validateMissions();
+validateTerrainTemplates();
+validateSimpleList(FIXTURES.commander_traits, "commander_traits", ["id", "name", "effect"]);
+validateSimpleList(FIXTURES.battle_events, "battle_events", ["id", "name", "effect"]);
+validateSimpleList(FIXTURES.advantages, "advantages", ["id", "name", "effect"]);
+validateRngSeed();
 validateUIReference();
 
 if (errors.length) {

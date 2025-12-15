@@ -1,9 +1,9 @@
 {
   "battle_event_id": null,
   "board_layout_id": "standard_15x9",
-  "command_log_id": "log_occupy_02",
-  "id": "match_occupy_02",
-  "mission_id": "occupy",
+  "command_log_id": "log_dead_zone_01",
+  "id": "match_dead_zone_01",
+  "mission_id": "dead_zone",
   "optional_rules": {
     "campaign": false,
     "commander": false,
@@ -55,7 +55,7 @@
       ]
     },
     "offset": 0.0,
-    "seed": "seed_occupy_02",
+    "seed": "seed_dead_zone_01",
     "version": "1.0.0"
   },
   "round_state": {
@@ -67,7 +67,7 @@
     "first_activation_choice": "first",
     "initiative_rolls": {
       "P1": 5.0,
-      "P2": 4.0
+      "P2": 3.0
     },
     "initiative_winner": "P1",
     "mission_points_this_round": {
@@ -93,20 +93,47 @@
     {
       "cells": [
         {
-          "col": 5.0,
-          "row": 4.0
+          "col": 6.0,
+          "row": 3.0
         }
       ],
-      "template_id": "low_cover"
+      "template_id": "blocking_rock"
+    },
+    {
+      "cells": [
+        {
+          "col": 7.0,
+          "row": 3.0
+        }
+      ],
+      "template_id": "blocking_rock"
+    },
+    {
+      "cells": [
+        {
+          "col": 8.0,
+          "row": 3.0
+        }
+      ],
+      "template_id": "blocking_rock"
     },
     {
       "cells": [
         {
           "col": 6.0,
-          "row": 6.0
+          "row": 5.0
         }
       ],
-      "template_id": "low_cover"
+      "template_id": "blocking_rock"
+    },
+    {
+      "cells": [
+        {
+          "col": 7.0,
+          "row": 5.0
+        }
+      ],
+      "template_id": "blocking_rock"
     },
     {
       "cells": [
@@ -120,17 +147,8 @@
     {
       "cells": [
         {
-          "col": 9.0,
-          "row": 4.0
-        }
-      ],
-      "template_id": "low_cover"
-    },
-    {
-      "cells": [
-        {
-          "col": 11.0,
-          "row": 5.0
+          "col": 6.0,
+          "row": 7.0
         }
       ],
       "template_id": "blocking_rock"
@@ -138,11 +156,29 @@
     {
       "cells": [
         {
-          "col": 12.0,
-          "row": 6.0
+          "col": 7.0,
+          "row": 7.0
         }
       ],
-      "template_id": "low_cover"
+      "template_id": "blocking_rock"
+    },
+    {
+      "cells": [
+        {
+          "col": 8.0,
+          "row": 7.0
+        }
+      ],
+      "template_id": "blocking_rock"
+    },
+    {
+      "cells": [
+        {
+          "col": 10.0,
+          "row": 5.0
+        }
+      ],
+      "template_id": "blocking_rock"
     }
   ],
   "unit_states": [

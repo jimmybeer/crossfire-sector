@@ -134,6 +134,9 @@ This dictionary is the agentic map for Crossfire Sector data: use it to align JS
   "version": "1.0.0"
 }
 ```
+- Current templates (fixtures):
+  - `blocking_rock` – blocking, provides cover, impassable; size 1–3.
+  - `low_cover` – non-blocking, provides cover, passable; size 1–2; higher placement weight for softer cover.
 
 ---
 

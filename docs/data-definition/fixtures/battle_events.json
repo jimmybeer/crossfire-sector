@@ -35,6 +35,13 @@
     "version": "1.0.0"
   },
   {
+    "id": "smoke_screen",
+    "name": "Smoke Screen",
+    "effect": "Place a 3x3 smoke template within 6; blocks LoS and provides cover until end of round.",
+    "trigger": "round_start",
+    "version": "1.0.0"
+  },
+  {
     "id": "no_event",
     "name": "No Event",
     "effect": "No event applies.",

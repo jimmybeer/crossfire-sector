@@ -1,0 +1,39 @@
+{
+  "events": [
+    {
+      "actor_unit_id": "unit_p1_1",
+      "advantage_id": "adv_01",
+      "command_id": "cmd_ce_advantage",
+      "event_seq": 1,
+      "hash_after": "sha256:e7e37905b24f9c32e902f6619cec3b784e4909a41aa02f97f459d2f1ceca7044",
+      "hash_before": "",
+      "offset": 1,
+      "player_id": "",
+      "requirements": [
+        "GR-040"
+      ],
+      "rolls": [
+        4
+      ],
+      "seed": 364688229,
+      "sequence": 1.0,
+      "severity": "info",
+      "timestamp_ms": 1,
+      "total": 4,
+      "type": "advantage_use"
+    }
+  ],
+  "final_hash": "",
+  "final_offset": 0,
+  "optional_rules": {
+    "campaign": true,
+    "commander": false,
+    "events": true
+  },
+  "scores": {
+    "P1": 0.0,
+    "P2": 0.0
+  },
+  "seed": "golden_ce_seed",
+  "status": "error"
+}

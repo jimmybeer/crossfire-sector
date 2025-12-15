@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | 0 | Foundations & architecture/data alignment | None | Validator/Resolver scaffolding, RNG/replay harness, save format/checksums, schema parity checks, exit metrics defined |
 | 1 | UI contracts & reference data feeds | 0 | UI scene contracts, state snapshot DTOs, desktop input mapping, rules reference feed, exit metrics defined |
-| 2 | Core rules engine & validation complete (local) | 0–1 | Full rules validation/resolution, mission scoring, campaign toggles, golden tests, action log, audit gate planned |
+| 2 | Core rules engine & validation complete (local) | 0–1 | Full rules validation/resolution, mission scoring, campaign toggles, golden tests, action log, audit gate planned (Stage 2 tests/benchmarks/traceability green) |
 | 3 | MVP gameplay loop (hotseat) | 0–2 | Playable loop with setup/deployment/rounds/actions, previews, save/resume, smoke audit gate |
 | 4 | MVP complete & stability | 3 | Full test pass, perf checks (LoS/cover), integrity checks, MVP acceptance criteria met, audit gate |
 | 5 | UX/UI polish & visual/audio direction | 4 | Improved visuals/animations/audio, UI refinement, accessibility/perf tuning with asset/perf budgets |
@@ -54,7 +54,7 @@
 - Risks & Mitigations: Coverage gaps → traceability matrix to requirements; performance → early LoS/cover benchmarks; regression → golden tests with seeds.
 - Exit Criteria: Requirement traceability matrix green; golden tests pass; LoS/cover micro-bench meets targets; action log includes dice/RNG offsets; planned audit gate ready (invoke AUDITOR after completion).
 - Agents: ARCH, REQ, DATA ENG, AUDITOR.
-- Links: stage plan to be created at `docs/plans/plan-stage-02.md`.
+- Links: `docs/plans/plan-stage-02.md`, `docs/plans/plan-stage-02-goals.md`.
 
 ### Stage 3 – MVP Gameplay Loop (Hotseat)
 - Objectives: Deliver playable 2-player hotseat with setup, deployment, full round/activation loop, previews, and save/resume.
@@ -143,4 +143,6 @@
 - Save integrity: checksums and atomic writes required from Stage 0 onward; regression tests after asset changes.
 
 ## Stage Plan Links
-- Stage plans will be added as `docs/plans/plan-stage-XX.md` when detailed planning is requested for each stage.
+- Stage 00: `docs/plans/plan-stage-00.md`
+- Stage 01: `docs/plans/plan-stage-01.md`
+- Stage 02: `docs/plans/plan-stage-02.md`

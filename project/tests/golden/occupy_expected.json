@@ -1,0 +1,30 @@
+{
+  "events": [
+    {
+      "actor_unit_id": "unit_p1_1",
+      "command_id": "cmd_oc_hold_p1",
+      "event_seq": 1,
+      "hash_after": "sha256:efc4cfa4d1585f4db35e9da6e6c18cab8f85e36fdf10785be27d4e7485cb22a2",
+      "hash_before": "",
+      "offset": 0,
+      "player_id": "",
+      "requirements": [
+        "GR-010"
+      ],
+      "seed": 2718482800,
+      "sequence": 1.0,
+      "severity": "info",
+      "timestamp_ms": 1,
+      "type": "hold",
+      "unit_id": "unit_p1_1"
+    }
+  ],
+  "final_hash": "",
+  "final_offset": 0,
+  "scores": {
+    "P1": 0.0,
+    "P2": 0.0
+  },
+  "seed": "golden_occupy_seed",
+  "status": "error"
+}

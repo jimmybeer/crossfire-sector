@@ -17,6 +17,10 @@ const CommandValidator = preload("res://project/src/validation/command_validator
 const ProductionResolver = preload("res://project/src/core/sample_resolver.gd")
 
 const FIXTURE_PATH := "res://docs/data-definition/fixtures/save_match.json"
+const SNAPSHOT_KEYS := [
+    "board", "units", "terrain", "reachability", "los", "cover_sources", "activation",
+    "mission", "campaign", "options", "rng", "logs", "errors", "hash"
+]
 
 
 func _initialize() -> void:
@@ -56,7 +60,11 @@ func _run() -> bool:
 
     var loader := UISliceLoader.new(data_config, rng_seed, fixture_state)
     var load_result: Dictionary = loader.load_fixture(fixture_state)
-    _print_snapshot(load_result.get("snapshot", {}), "[ui-snapshot-smoke] initial snapshot")
+    var initial_snapshot: Dictionary = load_result.get("snapshot", {})
+    if not _has_snapshot_keys(initial_snapshot):
+        push_error("[ui-snapshot-smoke] Snapshot missing expected keys")
+        return false
+    _print_snapshot(initial_snapshot, "[ui-snapshot-smoke] initial snapshot")
 
     # Build a no-op/hold command if present in bindings, otherwise skip command step.
     var bindings: Dictionary = {"hold": {"command_type": "hold", "payload_template": {}}}
@@ -107,3 +115,10 @@ func _print_snapshot(snapshot: Dictionary, title: String) -> void:
             ]
         )
     )
+
+## Private: Ensure frozen DTO keys are present in snapshots.
+func _has_snapshot_keys(snapshot: Dictionary) -> bool:
+    for key in SNAPSHOT_KEYS:
+        if not snapshot.has(key):
+            return false
+    return true

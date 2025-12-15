@@ -34,6 +34,8 @@ const UIContracts = preload("res://project/src/ui/ui_contracts.gd")
 ## defaulted to keep UI rendering resilient during early prototyping.
 func state_to_snapshot(state: Dictionary) -> Dictionary:
     var board: Dictionary = state.get("board", {})
+    if board.is_empty():
+        board = state.get("board_layout", {})
     var units: Array = state.get("units", state.get("unit_states", []))
     var terrain: Array = state.get("terrain", [])
     var reachability: Array = []
@@ -46,14 +48,16 @@ func state_to_snapshot(state: Dictionary) -> Dictionary:
         cover_sources = preview_state.get("cover_sources", cover_sources)
     elif preview_state is Array:
         reachability = preview_state
-    var activation: Dictionary = state.get("activation", {})
+    var activation: Dictionary = state.get("activation", state.get("round_state", {}))
     var mission: Dictionary = state.get("mission", {})
+    if mission.is_empty() and state.has("mission_id"):
+        mission = {"mission_id": state.get("mission_id", ""), "scores": state.get("scores", {})}
     var campaign: Dictionary = state.get("campaign", {})
-    var options: Dictionary = state.get("options", {})
+    var options: Dictionary = state.get("options", state.get("optional_rules", {}))
     var rng: Dictionary = state.get("rng", {})
     var logs: Array = state.get("log", state.get("logs", []))
     var errors: Array = state.get("errors", [])
-    var state_hash: String = state.get("hash", "")
+    var state_hash: String = state.get("hash", state.get("state_hash", ""))
     return UIContracts.snapshot(
         board,
         units,
@@ -66,7 +70,7 @@ func state_to_snapshot(state: Dictionary) -> Dictionary:
         campaign,
         options,
         rng,
-        logs,
+        _normalize_logs(logs),
         errors,
         state_hash
     )
@@ -81,8 +85,22 @@ func events_to_stream(raw_events: Array) -> Array:
         payload.erase("type")
         var severity: String = payload.get("severity", "info")
         payload.erase("severity")
+        var requirements: Array = payload.get("requirements", _requirements_for_event(event_type))
+        payload.erase("requirements")
+        # Keep determinism evidence for UI or logs.
+        var evidence_fields := [
+            "seed",
+            "offset",
+            "event_seq",
+            "timestamp_ms",
+            "hash_before",
+            "hash_after"
+        ]
+        for field in evidence_fields:
+            if not payload.has(field) and event_data.has(field):
+                payload[field] = event_data.get(field, null)
         stream.append(
-            UIContracts.event(event_type, payload, _requirements_for_event(event_type), severity)
+            UIContracts.event(event_type, payload, requirements, severity)
         )
     return stream
 
@@ -96,6 +114,23 @@ func errors_to_ui(errors: Array) -> Array:
         var reqs: Array = err.get("requirements", [])
         ui_errors.append(UIContracts.error(code, message, reqs))
     return ui_errors
+
+## Private: Normalize logs to UI-friendly entries with required keys.
+func _normalize_logs(logs: Array) -> Array:
+    var out: Array = []
+    for log_entry in logs:
+        if log_entry is String:
+            out.append({"message": log_entry, "severity": "info"})
+        elif log_entry is Dictionary:
+            var entry: Dictionary = log_entry.duplicate(true)
+            if not entry.has("message") and entry.has("text"):
+                entry["message"] = entry.get("text", "")
+            entry["severity"] = entry.get("severity", "info")
+            entry["requirements"] = entry.get("requirements", [])
+            entry["event_seq"] = entry.get("event_seq", null)
+            entry["timestamp_ms"] = entry.get("timestamp_ms", null)
+            out.append(entry)
+    return out
 
 
 ## Private: Map event types to requirement coverage for quick traceability in UI.

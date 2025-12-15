@@ -16,5 +16,11 @@
     "name": "Stealth",
     "effect": "Cannot be targeted if in cover.",
     "version": "1.0.0"
+  },
+  {
+    "id": "inspire",
+    "name": "Inspire",
+    "effect": "Friendly units within 3 gain +1 reroll per battle (once each).",
+    "version": "1.0.0"
   }
 ]

@@ -15,6 +15,7 @@ const DEFAULT_SAMPLE_PAIRS := 50
 const BUDGET_MS := 500
 const BOARD_COLS := 15
 const BOARD_ROWS := 9
+const CommandValidator = preload("res://project/src/validation/command_validator.gd")
 
 
 ## Entry point: execute benchmark suite and exit with pass/fail code.
@@ -60,10 +61,17 @@ func _run_single_scenario(scenario: Dictionary) -> Dictionary:
 	var obstacles: Dictionary = _generate_obstacles(scenario)
 	var units: Array[Dictionary] = _generate_units(scenario, obstacles)
 	var pairs: Array[Dictionary] = _generate_pairs(scenario, units, obstacles, samples)
+	var validator: CommandValidator = CommandValidator.new()
+	var terrain_blocks: Dictionary = {"blocking": [], "cover": []}
+	for key in obstacles.keys():
+		var parts: Array = key.split(",")
+		if parts.size() == 2:
+			terrain_blocks["blocking"].append({"col": int(parts[0]) + 1, "row": int(parts[1]) + 1})
+			terrain_blocks["cover"].append({"col": int(parts[0]) + 1, "row": int(parts[1]) + 1})
 
 	var start: int = Time.get_ticks_msec()
 	for pair in pairs:
-		_compute_los_and_cover(pair, obstacles, scenario)
+		_compute_los_and_cover(pair, terrain_blocks, validator)
 	var duration: int = Time.get_ticks_msec() - start
 	var avg_ms: float = float(duration) / max(1, samples)
 	return {
@@ -131,63 +139,17 @@ func _generate_pairs(
 
 ## Private: Compute LoS and cover for a pair, useful for warming cache and avoiding
 ## dead-code removal.
-func _compute_los_and_cover(pair: Dictionary, obstacles: Dictionary, scenario: Dictionary) -> void:
+func _compute_los_and_cover(
+	pair: Dictionary, terrain_blocks: Dictionary, validator: CommandValidator
+) -> void:
 	var attacker: Dictionary = pair.get("attacker", {})
 	var target: Dictionary = pair.get("target", {})
-	var los_clear: bool = _has_line_of_sight(
-		attacker, target, obstacles, scenario.get("smoke", false)
+	var preview: Dictionary = validator._raycast_los(
+		attacker,
+		target,
+		terrain_blocks,
+		[],
+		{"columns": BOARD_COLS, "rows": BOARD_ROWS}
 	)
-	var cover_state: String = _cover_state(target, obstacles)
-	# Use results to avoid compiler stripping
-	if los_clear and cover_state == "none":
+	if preview.get("clear", false) and not preview.get("cover", false):
 		pass
-
-
-## Private: Bresenham-style LoS test with optional smoke blocking rule-of-thumb.
-func _has_line_of_sight(
-	attacker: Dictionary, target: Dictionary, obstacles: Dictionary, smoke: bool
-) -> bool:
-	var x0: int = int(attacker.get("col", 0))
-	var y0: int = int(attacker.get("row", 0))
-	var x1: int = int(target.get("col", 0))
-	var y1: int = int(target.get("row", 0))
-	var dx: int = abs(x1 - x0)
-	var dy: int = abs(y1 - y0)
-	var sx: int = 1 if x0 < x1 else -1
-	var sy: int = 1 if y0 < y1 else -1
-	var err: int = dx - dy
-	var cx: int = x0
-	var cy: int = y0
-	while true:
-		var key: String = "%s,%s" % [cx, cy]
-		if not (cx == x0 and cy == y0) and not (cx == x1 and cy == y1) and obstacles.has(key):
-			return false
-		if smoke and ((cx + cy) % 5 == 0):
-			return false
-		if cx == x1 and cy == y1:
-			break
-		var e2: int = 2 * err
-		if e2 > -dy:
-			err -= dy
-			cx += sx
-		if e2 < dx:
-			err += dx
-			cy += sy
-	return true
-
-
-## Private: Simple cover heuristic counting adjacent blockers around target.
-func _cover_state(target: Dictionary, obstacles: Dictionary) -> String:
-	var dirs: Array[Vector2i] = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
-	var cover_count: int = 0
-	for dir in dirs:
-		var cx: int = int(target.get("col", 0)) + dir.x
-		var cy: int = int(target.get("row", 0)) + dir.y
-		var key: String = "%s,%s" % [cx, cy]
-		if obstacles.has(key):
-			cover_count += 1
-	if cover_count >= 2:
-		return "cover"
-	if cover_count == 1:
-		return "light"
-	return "none"

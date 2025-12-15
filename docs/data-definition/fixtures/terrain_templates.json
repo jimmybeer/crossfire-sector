@@ -9,5 +9,16 @@
     "placement_weight": 2,
     "flags": {},
     "version": "1.0.0"
+  },
+  {
+    "id": "low_cover",
+    "name": "Low Cover",
+    "size_range": {"min": 1, "max": 2},
+    "blocks_los": false,
+    "provides_cover": true,
+    "impassable": false,
+    "placement_weight": 3,
+    "flags": {},
+    "version": "1.0.0"
   }
 ]

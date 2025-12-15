@@ -69,7 +69,6 @@ func replay(initial_state: Dictionary, commands: Array) -> Dictionary:
 		)
 		current_state = resolve_result.get("state", current_state)
 		events.append_array(resolve_result.get("events", []))
-
 		var state_hash: Variant = harness_hash_fn.call(current_state)
 		var expected_hash: Variant = command_data.get("state_hash_after", null)
 		if expected_hash != null:

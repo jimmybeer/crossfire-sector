@@ -115,9 +115,9 @@ if terrain_templates is not None:
         size = ter.get("size_range", {})
         require(isinstance(size.get("min"), int), f"{prefix} size_range.min must be int")
         require(isinstance(size.get("max"), int), f"{prefix} size_range.max must be int")
-        require(ter.get("blocks_los") is True, f"{prefix} blocks_los must be true")
-        require(ter.get("provides_cover") is True, f"{prefix} provides_cover must be true")
-        require(ter.get("impassable") is True, f"{prefix} impassable must be true")
+        require(isinstance(ter.get("blocks_los"), bool), f"{prefix} blocks_los must be boolean")
+        require(isinstance(ter.get("provides_cover"), bool), f"{prefix} provides_cover must be boolean")
+        require(isinstance(ter.get("impassable"), bool), f"{prefix} impassable must be boolean")
         require(isinstance(ter.get("placement_weight"), int), f"{prefix} placement_weight must be int")
         require(isinstance(ter.get("flags"), dict), f"{prefix} flags must be object")
         require(isinstance(ter.get("version"), str), f"{prefix} version must be string")
@@ -152,7 +152,7 @@ if battle_events is not None:
         require(isinstance(event.get("id"), str), f"{prefix} missing id")
         require(isinstance(event.get("name"), str), f"{prefix} missing name")
         require(isinstance(event.get("effect"), str), f"{prefix} missing effect")
-        require(event.get("trigger") == "pre_game", f"{prefix} trigger must be pre_game")
+        require(event.get("trigger") in {"pre_game", "round_start"}, f"{prefix} trigger invalid")
         require(isinstance(event.get("version"), str), f"{prefix} version must be string")
 
 optional_rules = load("optional_rules_config.json")
@@ -161,6 +161,9 @@ if optional_rules is not None:
     require(isinstance(optional_rules.get("commander"), bool), "Optional rules commander must be boolean")
     require(isinstance(optional_rules.get("events"), bool), "Optional rules events must be boolean")
     require(isinstance(optional_rules.get("campaign"), bool), "Optional rules campaign must be boolean")
+    require(optional_rules.get("commander") is False, "Optional rules commander must default to false")
+    require(optional_rules.get("events") is False, "Optional rules events must default to false")
+    require(optional_rules.get("campaign") is False, "Optional rules campaign must default to false")
     require(isinstance(optional_rules.get("version"), str), "Optional rules version must be string")
 
 rng_seed = load("rng_seed.json")
@@ -183,9 +186,8 @@ if command_log is not None:
     require(isinstance(command_log.get("checksum"), str), "Command log checksum must be string")
     require(isinstance(command_log.get("version"), str), "Command log version must be string")
 
-match_state = load("match_state.json")
-if match_state is not None:
-    require(isinstance(match_state, dict), "Match state must be object")
+def check_match_state(data: dict, label: str):
+    require(isinstance(data, dict), f"{label} must be object")
     for field in (
         "id",
         "board_layout_id",
@@ -195,23 +197,42 @@ if match_state is not None:
         "status",
         "version",
     ):
-        require(isinstance(match_state.get(field), str), f"Match state {field} must be string")
-    require(isinstance(match_state.get("terrain"), list), "Match state terrain must be array")
-    require(isinstance(match_state.get("optional_rules"), dict), "Match state optional_rules must be object")
-    opt_rules = match_state.get("optional_rules", {})
-    require(isinstance(opt_rules.get("commander"), bool), "Match state optional_rules.commander must be boolean")
-    require(isinstance(opt_rules.get("events"), bool), "Match state optional_rules.events must be boolean")
-    require(isinstance(opt_rules.get("campaign"), bool), "Match state optional_rules.campaign must be boolean")
-    require(isinstance(match_state.get("player_states"), list), "Match state player_states must be array")
-    require(isinstance(match_state.get("unit_states"), list), "Match state unit_states must be array")
-    round_state = match_state.get("round_state", {})
-    require(isinstance(round_state, dict), "Match state round_state must be object")
+        require(isinstance(data.get(field), str), f"{label} {field} must be string")
+    require(isinstance(data.get("terrain"), list), f"{label} terrain must be array")
+    require(isinstance(data.get("optional_rules"), dict), f"{label} optional_rules must be object")
+    opt_rules = data.get("optional_rules", {})
+    require(isinstance(opt_rules.get("commander"), bool), f"{label} optional_rules.commander must be boolean")
+    require(isinstance(opt_rules.get("events"), bool), f"{label} optional_rules.events must be boolean")
+    require(isinstance(opt_rules.get("campaign"), bool), f"{label} optional_rules.campaign must be boolean")
+    require(opt_rules.get("commander") is False, f"{label} optional_rules.commander must default to false")
+    require(opt_rules.get("events") is False, f"{label} optional_rules.events must default to false")
+    require(opt_rules.get("campaign") is False, f"{label} optional_rules.campaign must default to false")
+    require(isinstance(data.get("player_states"), list), f"{label} player_states must be array")
+    require(isinstance(data.get("unit_states"), list), f"{label} unit_states must be array")
+    round_state = data.get("round_state", {})
+    require(isinstance(round_state, dict), f"{label} round_state must be object")
     if isinstance(round_state, dict):
-        require(round_state.get("extra_rounds_remaining", 0) <= 1, "Match state round_state.extra_rounds_remaining must be <= 1")
-    rng = match_state.get("rng", {})
-    require(isinstance(rng, dict), "Match state rng must be object")
-    require(isinstance(rng.get("seed"), str), "Match state rng.seed must be string")
-    require(isinstance(rng.get("offset"), (int, float)), "Match state rng.offset must be number")
+        require(round_state.get("extra_rounds_remaining", 0) <= 1, f"{label} round_state.extra_rounds_remaining must be <= 1")
+    rng = data.get("rng", {})
+    require(isinstance(rng, dict), f"{label} rng must be object")
+    require(isinstance(rng.get("seed"), str), f"{label} rng.seed must be string")
+    require(isinstance(rng.get("offset"), (int, float)), f"{label} rng.offset must be number")
+
+match_state = load("match_state.json")
+if match_state is not None:
+    check_match_state(match_state, "Match state")
+
+match_state_crossfire = load("match_state_crossfire_clash.json")
+if match_state_crossfire is not None:
+    check_match_state(match_state_crossfire, "Match state crossfire_clash")
+
+match_state_dead_zone = load("match_state_dead_zone.json")
+if match_state_dead_zone is not None:
+    check_match_state(match_state_dead_zone, "Match state dead_zone")
+
+match_state_occupy = load("match_state_occupy.json")
+if match_state_occupy is not None:
+    check_match_state(match_state_occupy, "Match state occupy")
 
 campaign_state = load("campaign_state.json")
 if campaign_state is not None:

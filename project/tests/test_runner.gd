@@ -12,6 +12,7 @@ extends SceneTree
 
 const STATUS_PASS := "PASS"
 const STATUS_FAIL := "FAIL"
+const TESTS_ROOT := "res://project/tests/"
 
 var runner_results: Array = []
 
@@ -23,9 +24,11 @@ func _initialize() -> void:
 ## Private: Load each suite and collect results.
 func _run_all() -> int:
     runner_results.clear()
-    runner_results.append_array(_run_suite(load("res://tests/test_rng.gd").new()))
-    runner_results.append_array(_run_suite(load("res://tests/test_replay_and_validation.gd").new()))
-    runner_results.append_array(_run_suite(load("res://tests/test_persistence.gd").new()))
+    runner_results.append_array(_run_suite(load(TESTS_ROOT + "test_rng.gd").new()))
+    runner_results.append_array(
+        _run_suite(load(TESTS_ROOT + "test_replay_and_validation.gd").new())
+    )
+    runner_results.append_array(_run_suite(load(TESTS_ROOT + "test_persistence.gd").new()))
     var failures: int = _report()
     return 0 if failures == 0 else 1
 

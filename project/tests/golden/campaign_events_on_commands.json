@@ -1,0 +1,24 @@
+[
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_ce_advantage",
+    "payload": {
+      "advantage_id": "adv_01"
+    },
+    "rng_offset_before": 0,
+    "sequence": 1.0,
+    "state_hash_after": "sha256:61c09d22dc1dca42f48834c371612d72c2c74854a7018a92a6509a6d32fdc14d",
+    "type": "advantage_use"
+  },
+  {
+    "actor_unit_id": "unit_p1_2",
+    "id": "cmd_ce_event",
+    "payload": {
+      "event_id": "evt_01"
+    },
+    "rng_offset_before": 1,
+    "sequence": 2.0,
+    "state_hash_after": "sha256:6291f914306a7e03366c8958862ee8df2395f0a5a1e69db3786649709177ae97",
+    "type": "event_use"
+  }
+]

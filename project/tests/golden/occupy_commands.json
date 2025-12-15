@@ -1,0 +1,24 @@
+[
+  {
+    "actor_unit_id": "unit_p1_1",
+    "id": "cmd_oc_hold_p1",
+    "payload": {
+
+    },
+    "rng_offset_before": 0,
+    "sequence": 1.0,
+    "state_hash_after": "sha256:cd3ab172d27856fad14e0ffaf7c17c43c557c2e40674a1aa9996e99f72d18149",
+    "type": "hold"
+  },
+  {
+    "actor_unit_id": "unit_p2_1",
+    "id": "cmd_oc_hold_p2",
+    "payload": {
+
+    },
+    "rng_offset_before": 0,
+    "sequence": 2.0,
+    "state_hash_after": "sha256:486ac90b870d5889e2fc3051b727886f2ede7e43d483099c2c21c86bdcdc287a",
+    "type": "hold"
+  }
+]
